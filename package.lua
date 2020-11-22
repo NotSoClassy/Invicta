@@ -6,7 +6,9 @@
     license = "MIT",
     author = { name = "NotSoClassy", email = "NotSoClassy357@gmail.com" },
     homepage = "https://github.com/NotSoClassy/Invicta",
-    dependencies = {},
+    dependencies = {
+      "NotSoClassy/toast"
+    },
     files = {
       "**.lua",
       "!test*"
