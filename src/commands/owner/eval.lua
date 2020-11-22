@@ -34,7 +34,6 @@ return {
 	aliases = {'exec'},
 	hooks = {check = ownerOnly},
 	execute = function(msg, args)
-
 		local arg = table.concat(args, ' ')
 
 		if not arg then return end
