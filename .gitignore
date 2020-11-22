@@ -1,0 +1,6 @@
+deps
+config.lua
+*.bat
+discordia.log
+gateway.json
+.luacheckrc
