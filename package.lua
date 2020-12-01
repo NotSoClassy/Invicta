@@ -7,7 +7,8 @@
     author = { name = "NotSoClassy", email = "NotSoClassy357@gmail.com" },
     homepage = "https://github.com/NotSoClassy/Invicta",
     dependencies = {
-      "NotSoClassy/toast"
+      "NotSoClassy/toast",
+      "SinisterRectus/sqlite3"
     },
     files = {
       "**.lua",
