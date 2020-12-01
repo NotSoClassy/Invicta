@@ -4,6 +4,7 @@ local util = require '../util'
 return {
 	name = 'settings',
 	description = 'Get info on the command settings',
+	userPerms = {'manageGuild'},
 	execute = function(msg, _, conn)
 		local guildSettings = util.getGuildSettings(msg.guild.id, conn)
 		guildSettings.guild_id = nil
@@ -11,11 +12,11 @@ return {
 		local description = ''
 
 		for i, v in pairs(guildSettings) do
-			description = description .. i:gsub('_', ' '):gsub('^.', string.upper) .. ': ' .. v .. '\n'
+			description = description .. i .. ': ' .. v .. '\n'
 		end
 
 		return Embed()
-			:setTitle('Here are the custom settings')
+			:setTitle('Guild Settings')
 			:setDescription(description)
 			:setColor('random')
 			:send(msg.channel)
@@ -29,8 +30,11 @@ return {
 			execute = function(msg, args, conn, cmd)
 				if #args < 2 then return msg:reply('You are missing some required arguments. e.g `' .. cmd.example .. '`') end
 
-				local setting = args[1]:lower()
-				local value = args[2]
+				local setting = table.remove(args, 1):lower()
+				local value = table.concat(args):gsub('^"', ''):gsub('"$', '')
+
+				if setting == 'guild_id' then return msg:reply('You are not allowed to change this') end
+
 				local success, stmt = pcall(conn.prepare, conn, 'UPDATE guild_settings SET ' .. setting .. ' = ? WHERE guild_id = ?;')
 
 				if not success then return msg:reply('No setting found for `' .. setting .. '`') end
