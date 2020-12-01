@@ -1,4 +1,6 @@
 local commandHandler = require './commandHandler'
+local moduleHandler = require './moduleHandler'
+local discordia = require 'discordia'
 local loader = require './loader'
 local config = require './config'
 local toast = require 'toast'
@@ -6,6 +8,7 @@ local util = require './util'
 local sql = require 'sqlite3'
 
 local conn = sql.open 'invicta.db'
+local clock = discordia.Clock()
 local client = toast.Client {
 	prefix = config.prefix,
 	commandHandler = function(msg)
@@ -14,18 +17,22 @@ local client = toast.Client {
 	defaultHelp = true
 }
 
+moduleHandler.load()
+
 local function setupGuild(id)
 	conn:exec('INSERT INTO guild_settings (guild_id) VALUES (\''..id..'\')')
 end
 
 -- Events
 
-client:on('ready', function()
+clock:on('min', function()
 	for guild in client.guilds:iter() do
-		if not util.getGuildSettings(guild.id, conn) then
-			setupGuild(guild.id)
-		end
+		moduleHandler.runEvent('minute', guild, conn, guild)
 	end
+end)
+
+client:on('ready', function()
+	client:setGame(config.prefix .. 'help')
 end)
 
 client:on('guildCreate', function(guild)
@@ -33,9 +40,20 @@ client:on('guildCreate', function(guild)
 		setupGuild(guild.id)
 	end
 end)
+
+client:on('messageUpdate', function(msg)
+	if not msg.guild then return end
+	moduleHandler.runEvent('messageUpdate', msg.guild, conn, msg)
+end)
+
+client:on('messageDelete', function(msg)
+	if not msg.guild then return end
+	moduleHandler.runEvent('messageDelete', msg.guild, conn, msg)
+end)
+
 -- Commands
 
-for _, command in pairs(loader.loadCommands('commands')) do
+for _, command in ipairs(loader.load('commands')) do
 	client:addCommand(command)
 end
 
