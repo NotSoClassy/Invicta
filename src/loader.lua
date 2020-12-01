@@ -4,20 +4,20 @@ local pathjoin = require 'pathjoin'
 local pathJoin = pathjoin.pathJoin
 local handler = {}
 
-function handler.loadCommands(dir)
-	local commands = {}
+function handler.load(dir)
+	local files = {}
 	for name, type in fs.scandirSync(dir) do
 		if type == 'directory' then
 			local path = pathJoin(dir, name)
-			local buf = handler.loadCommands(path)
-			for _, command in ipairs(buf) do
-				table.insert(commands, command)
+			local buf = handler.load(path)
+			for _, v in ipairs(buf) do
+				table.insert(files, v)
 			end
 		elseif type == 'file' and name:match('%.lua$') then
-			table.insert(commands, require('./' .. pathJoin(dir, name)))
+			table.insert(files, require('./' .. pathJoin(dir, name)))
 		end
 	end
-	return commands
+	return files
 end
 
 return handler
