@@ -1,6 +1,7 @@
 deps
 config.lua
 *.bat
+*.db
 discordia.log
 gateway.json
 .luacheckrc
