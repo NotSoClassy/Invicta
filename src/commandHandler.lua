@@ -20,23 +20,25 @@ return function(msg, conn)
 	   return
 	end
 
-
 	local self = msg.client
-	local settings = util.getGuildSettings(msg.guild and msg.guild.id, conn)
+	local settings = msg.guild and util.getGuildSettings(msg.guild.id, conn)
+	local pre = self._prefix[1]
 
-	if msg.content == '<@!' .. msg.client.user.id .. '>' then
-		return msg:reply(string.format('My prefix is `%s`%s',
-			self._prefix[1],
-			settings.prefix and settings.prefix ~= self._prefix[1] and ', but on this server it\'s `' .. settings.prefix .. '`' or '')
-		)
+	if msg.guild and not settings then
+		conn:exec('INSERT INTO guild_settings (guild_id) VALUES (\'' .. msg.guild.id .. '\')')
+		settings = util.getGuildSettings(msg.guild.id, conn)
+		pre = settings.prefix
 	end
 
-	local toMatch = settings.prefix or self._prefix[1]
-	local prefix = msg.content:find(toMatch, 1, true) == 1 and toMatch
+	if msg.content == '<@!' .. msg.client.user.id .. '>' then
+		return msg:reply('My prefix is `' .. pre .. '`')
+	end
+
+	local prefix = msg.content:find(pre, 1, true) == 1 and pre
 
 	if not prefix then return end
 
-	local cmd, msgArg = string.match(msg.cleanContent:sub(#toMatch + 1), '^(%S+)%s*(.*)')
+	local cmd, msgArg = string.match(msg.cleanContent:sub(#pre + 1), '^(%S+)%s*(.*)')
 
 	if not cmd then return end
 
