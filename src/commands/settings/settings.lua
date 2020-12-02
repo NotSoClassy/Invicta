@@ -1,8 +1,16 @@
-local toast = require 'toast'
 local moduleHandler = require '../../moduleHandler'
+local toast = require 'toast'
+local json = require 'json'
 
 local concat, remove = table.concat, table.remove
 local perms = {'administrator'}
+
+local blacklistedCommands = {
+	settings = true,
+	eval = true,
+	prefix = true,
+	help = true
+}
 
 local settingColoums = {
 	log_channel = {
@@ -18,7 +26,6 @@ local settingColoums = {
 }
 
 local function showSettings(settings)
-
 	local description = ''
 
 	for _, v in pairs(settingColoums) do
@@ -32,11 +39,10 @@ local function showSettings(settings)
 end
 
 local function showModules(settings)
-
 	local description = ''
 
 	for _, mod in pairs(moduleHandler.moduleNames) do
-		description = description .. mod.name .. ' : ' .. (settings.disabled_modules[mod.name] and 'Disabled' or 'Enabled') .. '\n'
+		description = description .. mod.name .. ' : ' .. (settings.disabled_modules[mod.name] and 'disabled' or 'enabled') .. '\n'
 	end
 
 	return toast.Embed()
@@ -98,7 +104,7 @@ return {
 					return toast.Embed()
 						:setTitle(mod.name)
 						:setDescription(mod.description)
-						:addField('Value:', settings.disabled_modules[mod.name] and 'Disabled' or 'Enabled')
+						:addField('Value:', settings.disabled_modules[mod.name] and 'disabled' or 'enabled')
 						:setColor('GREEN')
 						:send(msg.channel)
 				else
@@ -132,6 +138,86 @@ return {
 
 						moduleHandler.disable(query, msg.guild, settings, conn)
 						msg:reply('`' .. query .. '` has been disabled')
+					end
+				}
+			}
+		},
+		{
+			name = 'commands',
+			description = 'A list of commands and if its disabled or enabled',
+			execute = function(msg, _, settings)
+				local description = ''
+
+				for _, v in ipairs(msg.client.commands) do
+					description = description .. v.name .. ' : ' .. (settings.disabled_commands[v.name] and 'disabled' or 'enabled') .. '\n'
+				end
+
+				return toast.Embed()
+					:setTitle('Modules')
+					:setDescription(description)
+					:setFooter('If you want info on a command just use the help command')
+					:setColor('GREEN')
+					:send(msg.channel)
+			end,
+			subCommands = {
+				{
+					name = 'enable',
+					description = 'Enables a disabled command',
+					example = '<command (not an alias)>',
+					execute = function(msg, args, settings, conn)
+						local query = concat(args, ' '):lower()
+						local command
+
+						if blacklistedCommands[query] then return msg:reply('You aren\'t allow to enable this command') end
+
+						for _, v in ipairs(msg.client.commands) do
+							if v.name == query then
+								command = v
+								break
+							end
+						end
+
+						if not settings.disabled_commands[query] then return msg:reply('`' .. query .. '` has been enabled') end
+						if not command then return msg:reply('No command found for `' .. query .. '`') end
+
+						settings.disabled_commands[command.name] = nil
+
+						local encoded = json.encode(settings.disabled_commands)
+						local stmt = conn:prepare('UPDATE guild_settings SET disabled_commands = ? WHERE guild_id = ?;')
+						stmt:reset():bind(encoded, msg.guild.id):step()
+						stmt:close()
+
+						msg:reply('`' .. command.name .. '` has been enabled')
+					end
+				},
+				{
+					name = 'disable',
+					description = 'Disables a enabled command',
+					example = '<command (not an alias)>',
+					execute = function(msg, args, settings, conn)
+						local query = concat(args, ' '):lower()
+						local command
+
+						if blacklistedCommands[query] then return msg:reply('You aren\'t allow to disable this command') end
+
+						for _, v in ipairs(msg.client.commands) do
+							if v.name == query then
+								command = v
+								break
+							end
+						end
+
+						if settings.disabled_commands[query] then return msg:reply('`' .. query .. '` has been disabled') end
+						if not command then return msg:reply('No command found for `' .. query .. '`') end
+
+						settings.disabled_commands[command.name] = true
+
+						local encoded = json.encode(settings.disabled_commands)
+						local stmt = conn:prepare('UPDATE guild_settings SET disabled_commands = ? WHERE guild_id = ?;')
+						stmt:reset():bind(encoded, msg.guild.id):step()
+						stmt:close()
+
+						msg:reply('`' .. command.name .. '` has been disabled')
 					end
 				}
 			}

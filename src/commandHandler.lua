@@ -74,12 +74,12 @@ return function(msg, conn)
 
 	for _, v in pairs(self._commands) do
 		if v.name == cmd or search(v.aliases, cmd) then
-		   command = v
-		   break
+			command = v
+			break
 		end
 	end
 
-	if not command then return end
+	if not command or settings.disabled_commands[command.name] then return end
 
 	for i = 1, #args do
 		local sub = findSub(command._subCommands, args[i])
