@@ -1,15 +1,36 @@
+local moduleHandler = require './moduleHandler'
 local discordia = require 'discordia'
 local toast = require 'toast'
+local json = require 'json'
 local util = require './util'
 
 local class, enums = discordia.class, discordia.enums
 
 local function search(tbl, q)
-	for i, k in pairs(tbl) do
-		if q == k then
+	for i, v in pairs(tbl) do
+		if q == v then
 		   return i
 		end
 	 end
+end
+
+local function findSub(tbl, q)
+	for _, v in pairs(tbl) do
+		if v.name == q or search(v.aliases, q) then
+			return v
+		end
+	end
+end
+
+local function setupGuild(id, conn)
+	local disabled = {}
+	for _, mod in pairs(moduleHandler.modules) do
+		if mod.disabledByDefault then
+			disabled[mod.name] = true
+		end
+	end
+	local encoded = json.encode(disabled)
+	conn:exec('INSERT INTO guild_settings (guild_id, disabled_modules) VALUES (\''..id..'\', \'' .. encoded .. '\')')
 end
 
 return function(msg, conn)
@@ -22,10 +43,10 @@ return function(msg, conn)
 
 	local self = msg.client
 	local settings = msg.guild and util.getGuildSettings(msg.guild.id, conn)
-	local pre = self._prefix[1]
+	local pre = settings and settings.prefix or self._prefix[1]
 
 	if msg.guild and not settings then
-		conn:exec('INSERT INTO guild_settings (guild_id) VALUES (\'' .. msg.guild.id .. '\')')
+		setupGuild(msg.guild.id, conn)
 		settings = util.getGuildSettings(msg.guild.id, conn)
 		pre = settings.prefix
 	end
@@ -56,17 +77,15 @@ return function(msg, conn)
 		   command = v
 		   break
 		end
-	 end
+	end
 
 	if not command then return end
 
-	for _, v in pairs(command.subCommands) do
-		if v.name == args[1] then
-		   table.remove(args, 1)
-		   command = v
-		   break
-		end
-	 end
+	for i = 1, #args do
+		local sub = findSub(command._subCommands, args[i])
+		if not sub then args = {unpack(args, i, #args)}; break end
+		command = sub
+	end
 
 	local check, content = command:check(msg)
 	if not check then return msg:reply(toast.util.errorEmbed(nil, content)) end
@@ -78,7 +97,7 @@ return function(msg, conn)
 
 	command.hooks.preCommand(msg)
 
-	local success, err = pcall(command.execute, msg, args, conn, command)
+	local success, err = pcall(command.execute, msg, args, settings, conn, command)
 
 	command.hooks.postCommand(msg, class.type(err) == 'Message' and err or nil)
 
