@@ -20,14 +20,21 @@ local client = toast.Client {
 moduleHandler.load()
 
 local function setupGuild(id)
-	conn:exec('INSERT INTO guild_settings (guild_id) VALUES (\''..id..'\')')
+	local disabled = {}
+	for _, mod in pairs(moduleHandler.modules) do
+		if mod.disabledByDefault then
+			disabled[mod.name] = true
+		end
+	end
+	local encoded = json.encode(disabled)
+	conn:exec('INSERT INTO guild_settings (guild_id, disabled_modules) VALUES (\''..id..'\', \'' .. encoded .. '\')')
 end
 
 -- Events
 
 clock:on('min', function()
 	for guild in client.guilds:iter() do
-		moduleHandler.runEvent('minute', guild, conn, guild)
+		moduleHandler.runEvent('clock.min', guild, conn, guild)
 	end
 end)
 
@@ -43,12 +50,12 @@ end)
 
 client:on('messageUpdate', function(msg)
 	if not msg.guild then return end
-	moduleHandler.runEvent('messageUpdate', msg.guild, conn, msg)
+	moduleHandler.runEvent('client.messageUpdate', msg.guild, conn, msg)
 end)
 
 client:on('messageDelete', function(msg)
 	if not msg.guild then return end
-	moduleHandler.runEvent('messageDelete', msg.guild, conn, msg)
+	moduleHandler.runEvent('client.messageDelete', msg.guild, conn, msg)
 end)
 
 -- Commands
