@@ -164,6 +164,7 @@ return {
 					name = 'enable',
 					description = 'Enables a disabled command',
 					example = '<command (not an alias)>',
+					userPerms = perms,
 					execute = function(msg, args, settings, conn)
 						local query = concat(args, ' '):lower()
 						local command
@@ -194,6 +195,7 @@ return {
 					name = 'disable',
 					description = 'Disables a enabled command',
 					example = '<command (not an alias)>',
+					userPerms = perms,
 					execute = function(msg, args, settings, conn)
 						local query = concat(args, ' '):lower()
 						local command
