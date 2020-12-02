@@ -1,7 +1,10 @@
 local toast = require 'toast'
 
 return {
-	event = 'messageUpdate',
+	name = 'message-edit-log',
+	description = 'Logs all the edited messages',
+	event = 'client.messageUpdate',
+	disabledByDefault = false,
 	run = function(msg, settings)
 		if not msg.guild or not settings or not msg.oldContent then return end
 
@@ -11,6 +14,8 @@ return {
 
 		local oldContent = msg.oldContent[msg.editedTimestamp]
 		local newContent = msg.content
+
+		if #oldContent == 0 and #newContent == 0 then return end
 
 		return toast.Embed()
 			:setAuthor('Message Edited')
