@@ -5,7 +5,8 @@ local conn = sql.open 'invicta.db'
 conn:exec([[
 CREATE TABLE IF NOT EXISTS guild_settings (
 	guild_id TEXT PRIMARY KEY,
-	prefix TEXT DEFAULT "]] .. config.prefix .. [[",
-	log_channel TEXT DEFAULT "NONE"
-);
-]])
+	prefix TEXT DEFAULT ']] .. config.prefix .. [[',
+	disabled_modules TEXT DEFAULT '{}',
+	disabled_commands TEXT DEFAULT '{}',
+	log_channel TEXT
+);]])
