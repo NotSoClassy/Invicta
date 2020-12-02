@@ -36,7 +36,7 @@ return {
 	execute = function(msg, args)
 		local arg = table.concat(args, ' ')
 
-		if not arg then return end
+		if not arg or #arg == 0 then return end
 
 		arg = arg:gsub('```lua\n?', ''):gsub('```\n?', '')
 
