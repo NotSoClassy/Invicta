@@ -6,10 +6,7 @@ local concat, remove = table.concat, table.remove
 local perms = {'administrator'}
 
 local blacklistedCommands = {
-	settings = true,
-	eval = true,
-	prefix = true,
-	help = true
+	settings = true
 }
 
 local settingColoums = {
@@ -35,30 +32,10 @@ local settingColoums = {
 	}
 }
 
-local function showSettings(settings)
-	local description = ''
-
-	for _, v in pairs(settingColoums) do
-		description = description .. v.name .. ' : ' .. tostring(settings[v.name]) .. '\n'
-	end
-
-	return toast.Embed()
-		:setTitle('Settings')
-		:setDescription(description)
-		:setColor('GREEN')
-end
-
-local function showModules(settings)
-	local description = ''
-
-	for _, mod in pairs(moduleHandler.moduleNames) do
-		description = description .. mod.name .. ' : ' .. (settings.disabled_modules[mod.name] and 'disabled' or 'enabled') .. '\n'
-	end
-
-	return toast.Embed()
-		:setTitle('Modules')
-		:setDescription(description)
-		:setColor('GREEN')
+local function updateSettings(where, what, id, conn)
+	local stmt = conn:prepare('UPDATE guild_settings SET ' .. where .. ' = ? WHERE guild_id = ?;')
+	stmt:reset():bind(what, id):step()
+	stmt:close()
 end
 
 return {
@@ -78,7 +55,17 @@ return {
 				:setColor('GREEN')
 				:send(msg.channel)
 		else
-			return showSettings(settings):send(msg.channel)
+			local description = ''
+
+			for _, v in pairs(settingColoums) do
+				description = description .. v.name .. ' : ' .. tostring(settings[v.name]) .. '\n'
+			end
+
+			return toast.Embed()
+				:setTitle('Settings')
+				:setDescription(description)
+				:setColor('GREEN')
+				:send(msg.channel)
 		end
 	end,
 	subCommands = {
@@ -95,9 +82,7 @@ return {
 
 				if not settingColoums[query] then return msg:reply('No setting found for `' .. query .. '`') end
 
-				local stmt = conn:prepare('UPDATE guild_settings SET ' .. query .. ' = ? WHERE guild_id = ?;')
-				stmt:reset():bind(value, msg.guild.id):step()
-				stmt:close()
+				updateSettings(query, value, msg.guild.id, conn)
 
 				msg:reply('`' .. query .. '` has been set to `' .. value .. '`')
 			end
@@ -117,8 +102,17 @@ return {
 						:addField('Value:', settings.disabled_modules[mod.name] and 'disabled' or 'enabled')
 						:setColor('GREEN')
 						:send(msg.channel)
-				else
-					return showModules(settings):send(msg.channel)
+				else	local description = ''
+
+					for _, mod in pairs(moduleHandler.moduleNames) do
+						description = description .. mod.name .. ' : ' .. (settings.disabled_modules[mod.name] and 'disabled' or 'enabled') .. '\n'
+					end
+
+					return toast.Embed()
+						:setTitle('Modules')
+						:setDescription(description)
+						:setColor('GREEN')
+						:send(msg.channel)
 				end
 			end,
 			subCommands = {
@@ -133,7 +127,7 @@ return {
 						if not moduleHandler.moduleNames[query] then return msg:reply('No module found for `' .. query .. '`') end
 
 						moduleHandler.enable(query, msg.guild, settings, conn)
-						msg:reply('`' .. query .. '` has been enabled')
+						return msg:reply('`' .. query .. '` has been enabled')
 					end
 				},
 				{
@@ -147,7 +141,7 @@ return {
 						if not moduleHandler.moduleNames[query] then return msg:reply('No module found for `' .. query .. '`') end
 
 						moduleHandler.disable(query, msg.guild, settings, conn)
-						msg:reply('`' .. query .. '` has been disabled')
+						return msg:reply('`' .. query .. '` has been disabled')
 					end
 				}
 			}
@@ -181,8 +175,6 @@ return {
 						local query = concat(args, ' '):lower()
 						local command
 
-						if blacklistedCommands[query] then return msg:reply('You aren\'t allow to enable this command') end
-
 						for _, v in ipairs(msg.client.commands) do
 							if v.name == query then
 								command = v
@@ -194,13 +186,9 @@ return {
 						if not command then return msg:reply('No command found for `' .. query .. '`') end
 
 						settings.disabled_commands[command.name] = nil
+						updateSettings('disabled_commands', json.encode(settings.disabled_commands), msg.guild.id, conn)
 
-						local encoded = json.encode(settings.disabled_commands)
-						local stmt = conn:prepare('UPDATE guild_settings SET disabled_commands = ? WHERE guild_id = ?;')
-						stmt:reset():bind(encoded, msg.guild.id):step()
-						stmt:close()
-
-						msg:reply('`' .. command.name .. '` has been enabled')
+						return msg:reply('`' .. command.name .. '` has been enabled')
 					end
 				},
 				{
@@ -225,13 +213,9 @@ return {
 						if not command then return msg:reply('No command found for `' .. query .. '`') end
 
 						settings.disabled_commands[command.name] = true
+						updateSettings('disabled_commands', json.encode(settings.disabled_commands), msg.guild.id, conn)
 
-						local encoded = json.encode(settings.disabled_commands)
-						local stmt = conn:prepare('UPDATE guild_settings SET disabled_commands = ? WHERE guild_id = ?;')
-						stmt:reset():bind(encoded, msg.guild.id):step()
-						stmt:close()
-
-						msg:reply('`' .. command.name .. '` has been disabled')
+						return msg:reply('`' .. command.name .. '` has been disabled')
 					end
 				}
 			}
