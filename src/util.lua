@@ -23,4 +23,9 @@ function util.getGuildSettings(id, conn)
 	return format(settings)
 end
 
+function util.safeSend(chnl, content)
+	if not chnl.guild:getMember(chnl.client.user.id):hasPermission('sendMessages') then return end
+	return chnl:send(content)
+end
+
 return util
