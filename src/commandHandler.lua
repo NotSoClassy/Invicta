@@ -42,7 +42,7 @@ return function(msg, conn)
 	end
 
 	local self = msg.client
-	local settings = msg.guild and util.getGuildSettings(msg.guild.id, conn)
+	local _, settings = pcall(util.getGuildSettings, msg.guild.id, conn)
 	local pre = settings and settings.prefix or self._prefix[1]
 
 	if msg.guild and not settings then
