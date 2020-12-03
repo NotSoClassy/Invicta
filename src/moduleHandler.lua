@@ -44,7 +44,7 @@ function handler.runEvent(event, guild, conn, ...)
 	local success, err = pcall(function(...)
 		for _, mod in ipairs(handler.modules) do
 			if mod.event == event and not settings.disabled_modules[mod.name] then
-				mod.run(..., settings, conn)
+				mod.execute(..., settings, conn)
 			end
 		end
 	end, ...)
