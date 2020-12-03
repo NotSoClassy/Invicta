@@ -5,6 +5,7 @@ local loader = require './loader'
 local config = require './config'
 local toast = require 'toast'
 local util = require './util'
+local json = require 'json'
 local sql = require 'sqlite3'
 
 local conn = sql.open 'invicta.db'
