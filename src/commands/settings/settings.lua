@@ -18,6 +18,11 @@ local settingColoums = {
 		description = 'The channel where logs are sent to',
 		args = '<channel id>'
 	},
+	auto_role = {
+		name = 'auto_role',
+		description = 'Gives someone a role when they join (You also need to enable the module for this to work)',
+		args = '<role id>'
+	},
 	prefix = {
 		name = 'prefix',
 		description = 'The prefix for the bot (The prefix command is better)',

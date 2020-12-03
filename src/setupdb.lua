@@ -8,5 +8,6 @@ CREATE TABLE IF NOT EXISTS guild_settings (
 	prefix TEXT DEFAULT ']] .. config.prefix .. [[',
 	disabled_modules TEXT DEFAULT '{}',
 	disabled_commands TEXT DEFAULT '{}',
+	auto_role TEXT,
 	log_channel TEXT
 );]])
