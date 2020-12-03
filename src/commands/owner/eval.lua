@@ -33,7 +33,7 @@ return {
 	hidden = true,
 	aliases = {'exec'},
 	hooks = {check = ownerOnly},
-	execute = function(msg, args)
+	execute = function(msg, args, _, conn)
 		local arg = table.concat(args, ' ')
 
 		if not arg or #arg == 0 then return end
@@ -44,6 +44,7 @@ return {
 
 		sandbox.msg = msg
 		sandbox.client = msg.client
+		sandbox.conn = conn
 		sandbox.print = function(...) table.insert(lines, printLine(...)) end
 		sandbox.p = function(...) table.insert(lines, prettyLine(...)) end
 
