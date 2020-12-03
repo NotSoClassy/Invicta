@@ -2,7 +2,7 @@ local toast = require 'toast'
 
 return {
 	name = 'message-edit-log',
-	description = 'Logs all the edited messages',
+	description = 'Logs all the edited messages.',
 	event = 'client.messageUpdate',
 	disabledByDefault = false,
 	execute = function(msg, settings)

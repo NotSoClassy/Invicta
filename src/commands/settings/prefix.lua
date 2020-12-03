@@ -1,6 +1,6 @@
 return {
 	name = 'prefix',
-	description = 'Change the bot prefix for the guild',
+	description = 'Change the bot prefix for the guild.',
 	example = '[prefix (can be in quotes)]',
 	userPerms = {'administrator'},
 	execute = function(msg, args, settings, conn)

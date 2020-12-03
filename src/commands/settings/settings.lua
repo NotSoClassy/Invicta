@@ -15,17 +15,22 @@ local blacklistedCommands = {
 local settingColoums = {
 	log_channel = {
 		name = 'log_channel',
-		description = 'The channel where logs are sent to',
+		description = 'The channel where logs are sent to.',
+		args = '<channel id>'
+	},
+	welcome_channel = {
+		name = 'welcome_channel',
+		description = 'Welcomes/Goodbyes people who join/leave. (You also need to enable the module(s) for this to work)',
 		args = '<channel id>'
 	},
 	auto_role = {
 		name = 'auto_role',
-		description = 'Gives someone a role when they join (You also need to enable the module for this to work)',
+		description = 'Gives someone a role when they join. (You also need to enable the module for this to work)',
 		args = '<role id>'
 	},
 	prefix = {
 		name = 'prefix',
-		description = 'The prefix for the bot (The prefix command is better)',
+		description = 'The prefix for the bot. (The prefix command is better)',
 		args = '<prefix>'
 	}
 }
@@ -58,7 +63,7 @@ end
 
 return {
 	name = 'settings',
-	description = 'List of customizable settings',
+	description = 'List of customizable settings.',
 	example = '[setting]',
 	execute = function(msg, args, settings)
 		local query = concat(args, ' '):lower()
@@ -79,7 +84,7 @@ return {
 	subCommands = {
 		{
 			name = 'set',
-			description = 'Change the value of a setting',
+			description = 'Change the value of a setting.',
 			example = '<setting> <value>',
 			userPerms = perms,
 			execute = function(msg, args, _, conn)
@@ -99,7 +104,7 @@ return {
 		},
 		{
 			name = 'modules',
-			description = 'A list of all modules',
+			description = 'A list of all modules.',
 			example = '[module]',
 			execute = function(msg, args, settings)
 				local query = concat(args, ' '):lower()
@@ -119,7 +124,7 @@ return {
 			subCommands = {
 				{
 					name = 'enable',
-					description = 'Enable a disabled module',
+					description = 'Enable a disabled module.',
 					example = '<module>',
 					userPerms = perms,
 					execute = function(msg, args, settings, conn)
@@ -133,7 +138,7 @@ return {
 				},
 				{
 					name = 'disable',
-					description = 'Disable a enabled module',
+					description = 'Disable a enabled module.',
 					example = '<module>',
 					userPerms = perms,
 					execute = function(msg, args, settings, conn)
@@ -149,7 +154,7 @@ return {
 		},
 		{
 			name = 'commands',
-			description = 'A list of commands and if its disabled or enabled',
+			description = 'A list of commands and if its disabled or enabled.',
 			execute = function(msg, _, settings)
 				local description = ''
 
@@ -169,7 +174,7 @@ return {
 			subCommands = {
 				{
 					name = 'enable',
-					description = 'Enables a disabled command',
+					description = 'Enables a disabled command.',
 					example = '<command (not an alias)>',
 					userPerms = perms,
 					execute = function(msg, args, settings, conn)
@@ -200,7 +205,7 @@ return {
 				},
 				{
 					name = 'disable',
-					description = 'Disables a enabled command',
+					description = 'Disables a enabled command.',
 					example = '<command (not an alias)>',
 					userPerms = perms,
 					execute = function(msg, args, settings, conn)

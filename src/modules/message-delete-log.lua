@@ -2,7 +2,7 @@ local toast = require 'toast'
 
 return {
 	name = 'message-delete-log',
-	description = 'Logs all the deleted messages',
+	description = 'Logs all the deleted messages.',
 	event = 'client.messageDelete',
 	disabledByDefault = false,
 	execute = function(msg, settings)

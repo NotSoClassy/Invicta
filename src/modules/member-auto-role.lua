@@ -2,7 +2,7 @@ local toast = require 'toast'
 
 return {
 	name = 'member-auto-role',
-	description = 'Gives the auto role',
+	description = 'Gives the auto role if it\'s set.',
 	event = 'client.memberJoin',
 	disabledByDefault = true,
 	execute = function(member, settings)

@@ -29,7 +29,7 @@ end
 
 return {
 	name = 'eval',
-	description = 'Evaluates lua code',
+	description = 'Evaluates lua code.',
 	hidden = true,
 	aliases = {'exec'},
 	hooks = {check = ownerOnly},

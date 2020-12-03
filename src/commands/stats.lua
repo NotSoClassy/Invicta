@@ -2,7 +2,7 @@ local toast = require 'toast'
 
 return {
 	name = 'stats',
-	description = 'Get info on the bot',
+	description = 'Get info on the bot.',
 	execute = function(msg)
 		local client = msg.client
 		return toast.Embed()
