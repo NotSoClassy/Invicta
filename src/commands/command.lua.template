@@ -1,0 +1,8 @@
+return {
+	name = '',
+	description = '',
+	example = '',
+	execute = function(msg, args, settings, conn, command)
+
+	end
+}
