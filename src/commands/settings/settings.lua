@@ -20,7 +20,7 @@ local settingColoums = {
 	},
 	welcome_channel = {
 		name = 'welcome_channel',
-		description = 'Welcomes/Goodbyes people who join/leave. (You also need to enable the module(s) for this to work)',
+		description = 'Welcomes/Goodbyes people who join/leave. (You also need to enable the modules for this to work)',
 		args = '<channel id>'
 	},
 	auto_role = {

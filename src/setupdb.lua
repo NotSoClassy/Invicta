@@ -9,5 +9,6 @@ CREATE TABLE IF NOT EXISTS guild_settings (
 	disabled_modules TEXT DEFAULT '{}',
 	disabled_commands TEXT DEFAULT '{}',
 	auto_role TEXT,
+	welcome_channel TEXT,
 	log_channel TEXT
 );]])

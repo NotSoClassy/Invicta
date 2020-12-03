@@ -53,6 +53,10 @@ client:on('memberJoin', function(member)
 	moduleHandler.runEvent('client.memberJoin', member.guild, conn, member)
 end)
 
+client:on('memberLeave', function(member)
+	moduleHandler.runEvent('client.memberLeave', member.guild, conn, member)
+end)
+
 client:on('messageUpdate', function(msg)
 	if not msg.guild then return end
 	moduleHandler.runEvent('client.messageUpdate', msg.guild, conn, msg)
