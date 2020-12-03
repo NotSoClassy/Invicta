@@ -1,5 +1,7 @@
-<h1 align="center"> Invicta </h1>
-<img alt="Lines" src="https://img.shields.io/tokei/lines/github/notsoclassy/invicta?style=flat-square" align="center">
+<h1 align="center">Invicta</h1>
+<p align="center">
+  <img alt="Lines" src="https://img.shields.io/tokei/lines/github/notsoclassy/invicta?style=flat-square">
+</p>
 
 # About
 
