@@ -149,7 +149,9 @@ return {
 				local description = ''
 
 				for _, v in ipairs(msg.client.commands) do
-					description = description .. v.name .. ' : ' .. (settings.disabled_commands[v.name] and 'disabled' or 'enabled') .. '\n'
+					if not v.visble then
+						description = description .. v.name .. ' : ' .. (settings.disabled_commands[v.name] and 'disabled' or 'enabled') .. '\n'
+					end
 				end
 
 				return toast.Embed()
