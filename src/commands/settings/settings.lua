@@ -84,7 +84,7 @@ return {
 
 				updateSettings(query, value, msg.guild.id, conn)
 
-				msg:reply('`' .. query .. '` has been set to `' .. value .. '`')
+				return msg:reply('`' .. query .. '` has been set to `' .. value .. '`')
 			end
 		},
 		{
@@ -102,7 +102,8 @@ return {
 						:addField('Value:', settings.disabled_modules[mod.name] and 'disabled' or 'enabled')
 						:setColor('GREEN')
 						:send(msg.channel)
-				else	local description = ''
+				else
+					local description = ''
 
 					for _, mod in pairs(moduleHandler.moduleNames) do
 						description = description .. mod.name .. ' : ' .. (settings.disabled_modules[mod.name] and 'disabled' or 'enabled') .. '\n'
@@ -186,8 +187,8 @@ return {
 						if not command then return msg:reply('No command found for `' .. query .. '`') end
 
 						settings.disabled_commands[command.name] = nil
-						updateSettings('disabled_commands', json.encode(settings.disabled_commands), msg.guild.id, conn)
 
+						updateSettings('disabled_commands', json.encode(settings.disabled_commands), msg.guild.id, conn)
 						return msg:reply('`' .. command.name .. '` has been enabled')
 					end
 				},
@@ -213,8 +214,8 @@ return {
 						if not command then return msg:reply('No command found for `' .. query .. '`') end
 
 						settings.disabled_commands[command.name] = true
-						updateSettings('disabled_commands', json.encode(settings.disabled_commands), msg.guild.id, conn)
 
+						updateSettings('disabled_commands', json.encode(settings.disabled_commands), msg.guild.id, conn)
 						return msg:reply('`' .. command.name .. '` has been disabled')
 					end
 				}
