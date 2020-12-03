@@ -5,7 +5,7 @@ return {
 	description = 'Logs all the edited messages',
 	event = 'client.messageUpdate',
 	disabledByDefault = false,
-	run = function(msg, settings)
+	execute = function(msg, settings)
 		if not msg.guild or not settings or not msg.oldContent then return end
 
 		local chnl = msg.guild:getChannel(settings.log_channel)

@@ -5,7 +5,7 @@ return {
 	description = 'Logs all the deleted messages',
 	event = 'client.messageDelete',
 	disabledByDefault = false,
-	run = function(msg, settings)
+	execute = function(msg, settings)
 		if not msg.guild or not settings or #msg.content == 0 then return end
 
 		local chnl = msg.guild:getChannel(settings.log_channel)
