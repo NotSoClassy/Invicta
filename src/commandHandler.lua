@@ -3,6 +3,7 @@ local discordia = require 'discordia'
 local toast = require 'toast'
 local json = require 'json'
 local util = require './util'
+local rex = require 'rex'
 
 local class, enums = discordia.class, discordia.enums
 
@@ -66,7 +67,7 @@ return function(msg, conn)
 	cmd = cmd:lower()
 
 	local args = {}
-	for arg in string.gmatch(msgArg, '%S+') do
+	for arg in rex.gmatch(msgArg, [[(?|"(.+?)"|'(.+?)'|(\S+))]]) do
 	   table.insert(args, arg)
 	end
 
