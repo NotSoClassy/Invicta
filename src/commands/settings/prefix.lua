@@ -1,10 +1,10 @@
 return {
 	name = 'prefix',
 	description = 'Change the bot prefix for the guild.',
-	example = '[prefix (can be in quotes)]',
+	example = '[prefix]',
 	userPerms = {'administrator'},
 	execute = function(msg, args, settings, conn)
-		local prefix = table.concat(args, ' '):gsub('^"', ''):gsub('"$', '')
+		local prefix = table.concat(args, ' ')
 
 		if #prefix == 0 then return msg:reply('The current prefix is `' .. settings.prefix .. '`') end
 		if prefix == settings.prefix then return msg:reply('The prefix is already `' .. prefix .. '`') end
