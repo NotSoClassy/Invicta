@@ -156,7 +156,7 @@ return {
 				local description = ''
 
 				for _, v in ipairs(msg.client.commands) do
-					if not v.visble then
+					if not v.hidden then
 						description = description .. v.name .. ' : ' .. (settings.disabled_commands[v.name] and 'disabled' or 'enabled') .. '\n'
 					end
 				end
