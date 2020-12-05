@@ -2,6 +2,7 @@ return {
 	name = 'cleanup',
 	description = 'Clear bot messages and messages that start with the bot prefix.',
 	userPerms = {'manageMessages'},
+	botPerms = {'manageMessages'},
 	execute = function(msg, _, settings)
 		local ids = {}
 		for m in msg.channel:getMessages(50):iter() do
