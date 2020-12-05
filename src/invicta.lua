@@ -14,8 +14,7 @@ local client = toast.Client {
 	prefix = config.prefix,
 	commandHandler = function(msg)
 		return commandHandler(msg, conn)
-	end,
-	defaultHelp = true
+	end
 }
 
 moduleHandler.load()
