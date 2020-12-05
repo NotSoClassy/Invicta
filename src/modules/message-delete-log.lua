@@ -4,7 +4,8 @@ return {
 	name = 'message-delete-log',
 	description = 'Logs all the deleted messages.',
 	event = 'client.messageDelete',
-	disabledByDefault = false,
+	hidden = false,
+	disabledByDefault = true,
 	execute = function(msg, settings)
 		if not msg.guild or not settings or #msg.content == 0 then return end
 

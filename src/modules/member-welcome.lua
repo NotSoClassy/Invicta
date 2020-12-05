@@ -4,7 +4,8 @@ return {
 	name = 'member-welcome',
 	description = 'Welcomes members when they join.',
 	event = 'client.memberJoin',
-	disabledByDefault = false,
+	hidden = false,
+	disabledByDefault = true,
 	execute = function(member, settings)
 		if not settings.welcome_channel then return end
 

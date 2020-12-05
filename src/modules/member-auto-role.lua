@@ -4,6 +4,7 @@ return {
 	name = 'member-auto-role',
 	description = 'Gives the auto role if it\'s set.',
 	event = 'client.memberJoin',
+	hidden = false,
 	disabledByDefault = true,
 	execute = function(member, settings)
 		if not settings.auto_role then return end

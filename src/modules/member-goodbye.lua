@@ -4,7 +4,8 @@ return {
 	name = 'member-goodbye',
 	description = 'Says goodbye to members that leave.',
 	event = 'client.memberLeave',
-	disabledByDefault = false,
+	hidden = false,
+	disabledByDefault = true,
 	execute = function(member, settings)
 		if not settings.welcome_channel then return end
 

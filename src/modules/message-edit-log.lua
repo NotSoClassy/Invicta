@@ -4,7 +4,8 @@ return {
 	name = 'message-edit-log',
 	description = 'Logs all the edited messages.',
 	event = 'client.messageUpdate',
-	disabledByDefault = false,
+	hidden = false,
+	disabledByDefault = true,
 	execute = function(msg, settings)
 		if not msg.guild or not settings or not msg.oldContent then return end
 

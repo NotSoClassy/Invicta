@@ -2,6 +2,7 @@ return {
 	name = '',
 	description = '',
 	event = '',
+	hidden = false,
 	disabledByDefault = false,
 	execute = function(..., settings, conn)
 

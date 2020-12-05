@@ -106,7 +106,9 @@ return {
 					local description = ''
 
 					for _, mod in pairs(moduleHandler.moduleNames) do
-						description = description .. mod.name .. ' : ' .. (settings.disabled_modules[mod.name] and 'disabled' or 'enabled') .. '\n'
+						if not mod.hidden then
+							description = description .. mod.name .. ' : ' .. (settings.disabled_modules[mod.name] and 'disabled' or 'enabled') .. '\n'
+						end
 					end
 
 					return toast.Embed()
