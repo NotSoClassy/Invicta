@@ -17,11 +17,11 @@ return {
 	hooks = hooks,
 	aliases = {'prune'},
 	execute = function(msg, args)
-		msg:delete()
 		local amount = args[1] and tonumber(args[1]) or 50
 
 		if amount < 2 or amount > 100 then msg:reply('The amount must be in between 2-100.'); return end
 
+		msg:delete()
 		local success = msg.channel:bulkDelete(msg.channel:getMessages(amount))
 
 		if success then
@@ -50,6 +50,7 @@ return {
 					end
 				end
 
+				msg:delete()
 				local success = msg.channel:bulkDelete(ids)
 
 				if success then
@@ -79,6 +80,7 @@ return {
 					end
 				end
 
+				msg:delete()
 				local success = msg.channel:bulkDelete(ids)
 
 				if success then
