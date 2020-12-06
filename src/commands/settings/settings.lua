@@ -6,7 +6,8 @@ local concat, remove = table.concat, table.remove
 local perms = {'administrator'}
 
 local blacklistedCommands = {
-	settings = true
+	settings = true,
+	eval = true
 }
 
 local settingColoums = {
