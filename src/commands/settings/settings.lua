@@ -204,7 +204,7 @@ return {
 						local query = concat(args, ' '):lower()
 						local command
 
-						if blacklistedCommands[query] then return msg:reply('You aren\'t allow to disable this command') end
+						if blacklistedCommands[query] then return msg:reply('You aren\'t allowed to disable this command') end
 
 						for _, v in ipairs(msg.client.commands) do
 							if v.name == query then
