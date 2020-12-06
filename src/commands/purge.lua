@@ -1,6 +1,12 @@
+local timer = require 'timer'
 local rex = require 'rex'
 
 local perms = {'manageMessages'}
+local hooks = {postCommand = function(_, msg)
+	if not msg then return end
+	timer.sleep(3000)
+	msg:delete()
+end}
 
 return {
 	name = 'purge',
@@ -8,15 +14,21 @@ return {
 	example = '[2-100]',
 	userPerms = perms,
 	botPerms = perms,
+	hooks = hooks,
 	aliases = {'prune'},
 	execute = function(msg, args)
+		msg:delete()
 		local amount = args[1] and tonumber(args[1]) or 50
 
 		if amount < 2 or amount > 100 then return msg:reply('The amount must be in between 2-100.') end
 
-		msg:delete()
-		msg.channel:bulkDelete(msg.channel:getMessages(amount))
-		return msg:reply('Successfully purged messages!')
+		local success = msg.channel:bulkDelete(msg.channel:getMessages(amount))
+
+		if success then
+			return msg:reply('Successfully purged messages!')
+		else
+			return msg:reply('Could not purge messages, most likely due to one 2 weeks or older.')
+		end
 	end,
 	subCommands = {
 		{
@@ -25,7 +37,9 @@ return {
 			example = '<RegExp> [2-100]',
 			userPerms = perms,
 			botPerms = perms,
+			hooks = hooks,
 			execute = function(msg, args)
+				msg:delete()
 				local amount = args[2] and tonumber(args[2]) or 50
 
 				if amount < 2 or amount > 100 then return msg:reply('The amount must be inbetween 2-100') end
@@ -38,9 +52,14 @@ return {
 					end
 				end
 
-				msg.channel:bulkDelete(ids)
-				return msg:reply('Successfully purged messages!')
-			end
+				local success = msg.channel:bulkDelete(ids)
+
+				if success then
+					return msg:reply('Successfully purged messages!')
+				else
+					return msg:reply('Could not purge messages, most likely due to one 2 weeks or older.')
+				end
+			end,
 		},
 		{
 			name = 'find',
@@ -48,7 +67,9 @@ return {
 			example = '<text to find> [2-100]',
 			userPerms = perms,
 			botPerms = perms,
+			hooks = hooks,
 			execute = function(msg, args)
+				msg:delete()
 				if #args < 1 then return msg:reply('Missing required arguments') end
 
 				local amount = args[2] and tonumber(args[2]) or 50
@@ -62,8 +83,13 @@ return {
 					end
 				end
 
-				msg.channel:bulkDelete(ids)
-				return msg:reply('Successfully purged message!')
+				local success = msg.channel:bulkDelete(ids)
+
+				if success then
+					return msg:reply('Successfully purged messages!')
+				else
+					return msg:reply('Could not purge messages, most likely due to one 2 weeks or older.')
+				end
 			end
 		}
 	}
