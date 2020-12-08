@@ -1,5 +1,13 @@
 local toast = require 'toast'
 
+local function shrink(content)
+    if #content > 78 then
+        return string.sub(content, 0, 78 - 3) .. '...'
+    else
+        return content
+    end
+end
+
 local function embedGen(self, usage)
     local aliases = table.concat(self._aliases, ', ')
     local perms = table.concat(self._userPerms, ', ')
@@ -7,7 +15,7 @@ local function embedGen(self, usage)
     local sub = ''
 
     for _, cmd in pairs(self._subCommands) do
-        sub = sub .. cmd.name .. ' - ' .. cmd.description .. '\n'
+        sub = sub .. shrink('**' .. cmd.name .. '** - ' .. cmd.description) .. '\n'
     end
 
     return toast.Embed()
@@ -29,14 +37,6 @@ local function findCommand(cmds, q)
         if v.name == q or v == q or findCommand(v.aliases, q) then
             return v
         end
-    end
-end
-
-local function shrink(content)
-    if #content > 78 then
-        return string.sub(content, 0, 78 - 3) .. '...'
-    else
-        return content
     end
 end
 
