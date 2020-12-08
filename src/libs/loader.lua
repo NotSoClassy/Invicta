@@ -14,7 +14,7 @@ function handler.load(dir)
 				table.insert(files, v)
 			end
 		elseif type == 'file' and name:match('%.lua$') then
-			table.insert(files, require('./' .. pathJoin(dir, name)))
+			table.insert(files, require('../' .. pathJoin(dir, name)))
 		end
 	end
 	return files
