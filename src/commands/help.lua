@@ -32,6 +32,14 @@ local function findCommand(cmds, q)
     end
 end
 
+local function shrink(content)
+    if #content > 78 then
+        return string.sub(content, 0, 78 - 3) .. '...'
+    else
+        return content
+    end
+end
+
 return toast.Command('help', {
     description = 'This command!',
     example = '[name | alias]',
@@ -59,7 +67,7 @@ return toast.Command('help', {
 
             for _, cmd in pairs(msg.client.commands) do
                 if cmd.hidden == false then
-                    description = description .. cmd.name .. ' - ' .. cmd.description .. '\n'
+                    description = description .. shrink('**' .. cmd.name .. '** - ' .. cmd.description) .. '\n'
                 end
             end
 
