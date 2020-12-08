@@ -37,13 +37,14 @@ return toast.Command('help', {
     example = '[name | alias]',
     execute = function(msg, args, settings)
         local cmd = table.remove(args, 1)
+        local prefix = settings.prefix or msg.client.prefix[1]
 
         if cmd and #cmd ~= 0 then
             local command = findCommand(msg.client.commands, cmd)
 
             if not command then return msg:reply('No command or alias found for `' .. cmd .. '`') end
 
-            local usage = (settings.prefix or msg.client.prefix[1]) .. command.name
+            local usage = prefix .. command.name
 
             for _, sub in ipairs(args) do
                 local temp = findCommand(command.subCommands, sub)
@@ -66,7 +67,7 @@ return toast.Command('help', {
                 :setColor('GREEN')
                 :setTitle('Commands')
                 :setDescription(description)
-				:setFooter('You can do `help [command]` for alias, usage, permission and sub command info')
+				:setFooter('You can do `' .. prefix .. 'help [command]` for alias, usage, permission and sub command info')
                 :send(msg.channel)
         end
     end
