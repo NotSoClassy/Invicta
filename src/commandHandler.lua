@@ -2,7 +2,7 @@ local moduleHandler = require './moduleHandler'
 local discordia = require 'discordia'
 local toast = require 'toast'
 local json = require 'json'
-local util = require './util'
+local util = require 'util'
 local rex = require 'rex'
 
 local class, enums = discordia.class, discordia.enums

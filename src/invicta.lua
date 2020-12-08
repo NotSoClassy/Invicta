@@ -1,10 +1,10 @@
 local commandHandler = require './commandHandler'
 local moduleHandler = require './moduleHandler'
 local discordia = require 'discordia'
-local loader = require './loader'
 local config = require './config'
+local loader = require 'loader'
 local toast = require 'toast'
-local util = require './util'
+local util = require 'util'
 local json = require 'json'
 local sql = require 'sqlite3'
 

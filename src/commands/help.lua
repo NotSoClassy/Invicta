@@ -1,4 +1,4 @@
-local toast = require('toast')
+local toast = require 'toast'
 
 local function embedGen(self, usage)
     local aliases = table.concat(self._aliases, ', ')

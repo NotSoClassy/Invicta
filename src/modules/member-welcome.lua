@@ -1,4 +1,4 @@
-local util = require '../util'
+local util = require 'util'
 
 return {
 	name = 'member-welcome',

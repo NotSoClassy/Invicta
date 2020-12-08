@@ -1,6 +1,6 @@
-local loader = require './loader'
+local loader = require 'loader'
 local json = require 'json'
-local util = require './util'
+local util = require 'util'
 
 local handler = {
 	modules = {},
