@@ -1,8 +1,8 @@
 local toast = require 'toast'
 
-local function shrink(content)
-    if #content > 78 then
-        return string.sub(content, 0, 78 - 3) .. '...'
+local function shrink(content, pos)
+    if #content > pos then
+        return string.sub(content, 0, pos - 3) .. '...'
     else
         return content
     end
@@ -15,7 +15,7 @@ local function embedGen(self, usage)
     local sub = ''
 
     for _, cmd in pairs(self._subCommands) do
-        sub = sub .. shrink('**' .. cmd.name .. '** - ' .. cmd.description) .. '\n'
+        sub = sub .. shrink('**' .. cmd.name .. '** - ' .. cmd.description, 61) .. '\n'
     end
 
     return toast.Embed()
@@ -67,7 +67,7 @@ return toast.Command('help', {
 
             for _, cmd in pairs(msg.client.commands) do
                 if cmd.hidden == false then
-                    description = description .. shrink('**' .. cmd.name .. '** - ' .. cmd.description) .. '\n'
+                    description = description .. shrink('**' .. cmd.name .. '** - ' .. cmd.description, 78) .. '\n'
                 end
             end
 
