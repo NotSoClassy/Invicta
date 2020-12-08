@@ -60,9 +60,11 @@ return {
 
 		if #code > 1990 then return msg:reply {content = 'The output was to large.', file = {'output.txt', code}} end
 
-		return msg:reply {
-			content = #code > 0 and code or 'nil',
-			code = 'lua'
-		}
+		if code then 
+			return msg:reply {
+				content = #code > 0 and code,
+				code = 'lua'
+			}
+		end
 	end
 }
