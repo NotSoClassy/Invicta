@@ -1,6 +1,7 @@
+local discordia = require 'discordia'
 local json = require 'json'
-local util = {}
 
+local util = {}
 local jsonColoums = {
 	disabled_modules = true,
 	disabled_commands = true
@@ -26,6 +27,10 @@ end
 function util.safeSend(chnl, content)
 	if not chnl.guild:getMember(chnl.client.user.id):hasPermission('sendMessages') then return end
 	return chnl:send(content)
+end
+
+function util.canBulkDelete(msg)
+	return msg.id > (discordia.Date() - discordia.Time.fromWeeks(2)):toSnowflake()
 end
 
 return util

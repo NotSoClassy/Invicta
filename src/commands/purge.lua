@@ -1,4 +1,5 @@
 local timer = require 'timer'
+local util = require 'util'
 local rex = require 'rex'
 
 local perms = {'manageMessages'}
@@ -10,7 +11,7 @@ end}
 
 return {
 	name = 'purge',
-	description = 'Delete up to most recent messages.',
+	description = 'Delete up to most recent messages. (Messages 2 weeks or older will be ignored)',
 	example = '[2-100]',
 	userPerms = perms,
 	botPerms = perms,
@@ -21,17 +22,24 @@ return {
 
 		if amount < 2 or amount > 100 then msg:reply('The amount must be in between 2-100.'); return end
 
+		local ids = {}
+		for msg in msg.channel:getMessages(100) do
+			if util.canBulkDelete(msg) then
+				table.insert(ids, msg.id)
+			end
+		end
+
 		msg:delete()
-		local success = msg.channel:bulkDelete(msg.channel:getMessages(amount))
+		local success = msg.channel:bulkDelete(ids)
 
 		if success then
-			return msg:reply('Successfully purged messages!')
+			return msg:reply('Successfully purged ' .. #ids .. ' messages!')
 		end
 	end,
 	subCommands = {
 		{
 			name = 'match',
-			description = 'Delete every message that matches with a RegExp.',
+			description = 'Delete every message that matches with a RegExp. (Messages 2 weeks or older will be ignored)',
 			example = '<RegExp> [2-100]',
 			userPerms = perms,
 			botPerms = perms,
@@ -45,7 +53,7 @@ return {
 
 				local ids = {}
 				for msg in msg.channel:getMessages(amount):iter() do
-					if rex.find(msg.content, args[1]) then
+					if rex.find(msg.content, args[1]) and util.canBulkDelete(msg) then
 						table.insert(ids, msg.id)
 					end
 				end
@@ -54,13 +62,13 @@ return {
 				local success = msg.channel:bulkDelete(ids)
 
 				if success then
-					return msg:reply('Successfully purged messages!')
+					return msg:reply('Successfully purged ' .. #ids .. ' messages!')
 				end
 			end,
 		},
 		{
 			name = 'find',
-			description = 'Delete every message that has the provided text in it.',
+			description = 'Delete every message that has the provided text in it. (Messages 2 weeks or older will be ignored)',
 			example = '<text to find> [2-100]',
 			userPerms = perms,
 			botPerms = perms,
@@ -75,7 +83,7 @@ return {
 
 				local ids = {}
 				for msg in msg.channel:getMessages(amount):iter() do
-					if string.find(msg.content, args[1]) then
+					if string.find(msg.content, args[1]) and util.canBulkDelete(msg) then
 						table.insert(ids, msg.id)
 					end
 				end
@@ -84,7 +92,7 @@ return {
 				local success = msg.channel:bulkDelete(ids)
 
 				if success then
-					return msg:reply('Successfully purged messages!')
+					return msg:reply('Successfully purged ' .. #ids .. ' messages!')
 				end
 			end
 		}
