@@ -10,7 +10,7 @@ local blacklistedCommands = {
 	eval = true
 }
 
-local settingColoums = {
+local settingColumns = {
 	log_channel = {
 		name = 'log_channel',
 		description = 'The channel where logs are sent to.',
@@ -49,7 +49,7 @@ return {
 	example = '[setting]',
 	execute = function(msg, args, settings)
 		local query = concat(args, ' '):lower()
-		local coloum = settingColoums[query]
+		local coloum = settingColumns[query]
 
 		if coloum then
 			return toast.Embed()
@@ -62,7 +62,7 @@ return {
 		else
 			local description = ''
 
-			for _, v in pairs(settingColoums) do
+			for _, v in pairs(settingColumns) do
 				description = description .. v.name .. ' : ' .. tostring(settings[v.name]) .. '\n'
 			end
 
@@ -85,11 +85,11 @@ return {
 				local query = remove(args, 1):lower()
 				local value = concat(args, ' ')
 
-				if not settingColoums[query] then return msg:reply('No setting found for `' .. query .. '`') end
+				if not settingColumns[query] then return msg:reply('No setting found for `' .. query .. '`') end
 
 				updateSettings(query, value, msg.guild.id, conn)
 
-				for _, v in pairs(settingColoums[query].modules) do
+				for _, v in pairs(settingColumns[query].modules) do
 					settings.disabled_modules[v] = nil
 				end
 

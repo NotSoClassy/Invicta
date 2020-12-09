@@ -2,7 +2,7 @@ local discordia = require 'discordia'
 local json = require 'json'
 
 local util = {}
-local jsonColoums = {
+local jsonColumns = {
 	disabled_modules = true,
 	disabled_commands = true
 }
@@ -12,7 +12,7 @@ local levenshtein = discordia.extensions.string.levenshtein
 local function format(tbl)
 	if type(tbl) ~= 'table' then return end
 	for i, v in pairs(tbl) do
-		if jsonColoums[i] then
+		if jsonColumns[i] then
 			tbl[i] = json.parse(v[1])
 		else
 			tbl[i] = v[1]
