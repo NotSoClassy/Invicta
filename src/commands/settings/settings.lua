@@ -14,22 +14,26 @@ local settingColoums = {
 	log_channel = {
 		name = 'log_channel',
 		description = 'The channel where logs are sent to.',
-		args = '<channel id>'
+		args = '<channel id>',
+		modules = {'message-delete-log', 'message-edit-log'}
 	},
 	welcome_channel = {
 		name = 'welcome_channel',
-		description = 'Welcomes/Goodbyes people who join/leave. (You also need to enable the modules for this to work)',
-		args = '<channel id>'
+		description = 'Welcomes/Goodbyes people who join/leave.',
+		args = '<channel id>',
+		modules = {'member-welcome', 'member-goodbye'}
 	},
 	auto_role = {
 		name = 'auto_role',
-		description = 'Gives someone a role when they join. (You also need to enable the module for this to work)',
-		args = '<role id>'
+		description = 'Gives someone a role when they join.',
+		args = '<role id>',
+		modules = {'member-auto-role'}
 	},
 	prefix = {
 		name = 'prefix',
 		description = 'The prefix for the bot. (The prefix command is better)',
-		args = '<prefix>'
+		args = '<prefix>',
+		modules = {}
 	}
 }
 
@@ -75,7 +79,7 @@ return {
 			description = 'Change the value of a setting.',
 			example = '<setting> <value>',
 			userPerms = perms,
-			execute = function(msg, args, _, conn)
+			execute = function(msg, args, settings, conn)
 				if #args < 2 then return msg:reply('Missing required arguments (use help command for more info)') end
 
 				local query = remove(args, 1):lower()
@@ -84,6 +88,12 @@ return {
 				if not settingColoums[query] then return msg:reply('No setting found for `' .. query .. '`') end
 
 				updateSettings(query, value, msg.guild.id, conn)
+
+				for _, v in pairs(settingColoums[query].modules) do
+					settings.disabled_modules[v] = nil
+				end
+
+				updateSettings('disabled_modules', json.encode(settings.disabled_modules), msg.guild.id, conn)
 
 				return msg:reply('`' .. query .. '` has been set to `' .. value .. '`')
 			end
