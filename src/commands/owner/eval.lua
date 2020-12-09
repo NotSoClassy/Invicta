@@ -58,7 +58,7 @@ return {
 
 		local code = table.concat(lines, '\n')
 
-		if #code > 1990 then return msg:reply {content = 'The output was to large.', file = {'output.txt', code}} end
+		if #code > 1990 then return msg:reply {content = 'The output was too large.', file = {'output.txt', code}} end
 		if #code > 0 then return msg:reply {content = code, code = 'lua'} end
 	end
 }
