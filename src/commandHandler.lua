@@ -16,6 +16,7 @@ local function search(tbl, q)
 end
 
 local function findSub(tbl, q)
+	if not q then return end
 	for _, v in pairs(tbl) do
 		if v.name == q or search(v.aliases, q) then
 			return v
@@ -82,7 +83,7 @@ return function(msg, conn)
 
 	if not command or settings.disabled_commands[command.name] then return end
 
-	for i = 1, #args do
+	for i = 1, #args + 1 do
 		local sub = findSub(command._subCommands, args[i])
 		if not sub then args = {unpack(args, i, #args)}; break end
 		command = sub
