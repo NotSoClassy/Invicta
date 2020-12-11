@@ -11,7 +11,7 @@ end}
 
 return {
 	name = 'purge',
-	description = 'Delete up to most recent messages. (Messages 2 weeks or older will be ignored, this applies for the sub commands too)',
+	description = 'Delete most recent messages. (Messages 2 weeks or older will be ignored, this applies for the sub commands too)',
 	example = '[2-100]',
 	userPerms = perms,
 	botPerms = perms,
@@ -21,7 +21,9 @@ return {
 		local amount = args[1] and tonumber(args[1]) or 50
 
 		if amount < 2 or amount > 100 then msg:reply('The amount must be in between 2-100.'); return end
-
+		
+		msg:delete()
+		
 		local ids = {}
 		for msg in msg.channel:getMessages(amount):iter() do
 			if util.canBulkDelete(msg) then
@@ -29,7 +31,6 @@ return {
 			end
 		end
 
-		msg:delete()
 		local success = msg.channel:bulkDelete(ids)
 
 		if success then
@@ -50,6 +51,8 @@ return {
 				if amount < 2 or amount > 100 then msg:reply('The amount must be inbetween 2-100'); return end
 				if not pcall(rex.find, '', args[1]) then msg:reply('Invalid Regex'); return end
 
+				msg:delete()
+
 				local ids = {}
 				for msg in msg.channel:getMessages(amount):iter() do
 					if rex.find(msg.content, args[1]) and util.canBulkDelete(msg) then
@@ -57,7 +60,6 @@ return {
 					end
 				end
 
-				msg:delete()
 				local success = msg.channel:bulkDelete(ids)
 
 				if success then
@@ -79,6 +81,8 @@ return {
 
 				if amount < 2 or amount > 100 then msg:reply('The amount must be in between 2-100'); return end
 
+				msg:delete()
+
 				local ids = {}
 				for msg in msg.channel:getMessages(amount):iter() do
 					if string.find(msg.content, args[1]) and util.canBulkDelete(msg) then
@@ -86,7 +90,6 @@ return {
 					end
 				end
 
-				msg:delete()
 				local success = msg.channel:bulkDelete(ids)
 
 				if success then
@@ -112,6 +115,8 @@ return {
 
 				if not member then msg:reply(err); return end
 
+				msg:delete()
+
 				local ids = {}
 				for msg in msg.channel:getMessages(amount):iter() do
 					if msg.author.id == member.id and util.canBulkDelete(msg) then
@@ -119,7 +124,6 @@ return {
 					end
 				end
 
-				msg:delete()
 				local success = msg.channel:bulkDelete(ids)
 
 				if success then

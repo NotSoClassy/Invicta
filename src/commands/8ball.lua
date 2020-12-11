@@ -12,7 +12,7 @@ local responses = {
 return {
 	name = '8ball',
 	description = 'Ask the 8ball anything!',
-	example = '8ball <question>',
+	example = '<question>',
 	execute = function(msg, args)
 		if #args <= 0 then return msg:reply('You didn\'t ask anything') end
 		msg:reply(responses[math.random(#responses)])
