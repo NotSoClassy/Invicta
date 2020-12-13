@@ -21,15 +21,17 @@ return {
 		local amount = args[1] and tonumber(args[1]) or 50
 
 		if amount < 2 or amount > 100 then msg:reply('The amount must be in between 2-100.'); return end
-		
+
 		msg:delete()
-		
+
 		local ids = {}
 		for msg in msg.channel:getMessages(amount):iter() do
 			if util.canBulkDelete(msg) then
 				table.insert(ids, msg.id)
 			end
 		end
+
+		if #ids <= 2 then msg:reply('Couldn\'t find enough messages to delete.'); return end
 
 		local success = msg.channel:bulkDelete(ids)
 
@@ -60,6 +62,8 @@ return {
 					end
 				end
 
+				if #ids <= 2 then msg:reply('Couldn\'t find enough messages to delete.'); return end
+
 				local success = msg.channel:bulkDelete(ids)
 
 				if success then
@@ -89,6 +93,8 @@ return {
 						table.insert(ids, msg.id)
 					end
 				end
+
+				if #ids <= 2 then msg:reply('Couldn\'t find enough messages to delete.'); return end
 
 				local success = msg.channel:bulkDelete(ids)
 
@@ -123,6 +129,8 @@ return {
 						table.insert(ids, msg.id)
 					end
 				end
+
+				if #ids <= 2 then msg:reply('Couldn\'t find enough messages to delete.'); return end
 
 				local success = msg.channel:bulkDelete(ids)
 
