@@ -1,4 +1,6 @@
-local ownerOnly = require('../checks/ownerOnly')
+local class = require 'discordia' .class
+local util = require 'toast' .util
+local ownerOnly = require '../checks/ownerOnly'
 
 local function search(tbl, q)
 	for i, v in pairs(tbl) do
@@ -17,10 +19,16 @@ local function findSub(tbl, q)
 	end
 end
 
+local function hasPerms(member, channel, perms)
+	if not member or not channel.guild then return true end
+	local userPerms = member:getPermissions(channel)
+	return userPerms:has(unpack(perms))
+ end
+
 return {
 	name = 'sudo',
 	description = 'Runs a command without checking user permissions',
-	example = '[command] [...args]',
+	example = '[command] [...command args]',
 	hidden = true,
 	hooks = {check = ownerOnly},
 	execute = function(msg, args, settings, conn)
@@ -44,7 +52,15 @@ return {
 			command = sub
 		end
 
+		if not hasPerms(msg.guild:getMember(msg.client.user.id), msg.channel, command.botPerms) then
+			return msg:reply(util.errorEmbed(nil, 'I am missing permission to run this command (' .. table.concat(command.botPerms, ', ') .. ')'))
+		end
+
+		command.hooks.preCommand(msg)
+
 		local success, err = pcall(command.execute, msg, cmdArgs, settings, conn, command)
+
+		command.hooks.postCommand(msg, class.type(err) == 'Message' and err or nil)
 
 		if not success then
 			return msg:reply('```lua\n' .. err .. '```')
