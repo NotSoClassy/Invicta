@@ -31,7 +31,7 @@ return {
 			end
 		end
 
-		if #ids <= 2 then msg:reply('Couldn\'t find enough messages to delete.'); return end
+		if #ids < 2 then msg:reply('Couldn\'t find enough messages to delete.'); return end
 
 		local success = msg.channel:bulkDelete(ids)
 
@@ -62,7 +62,7 @@ return {
 					end
 				end
 
-				if #ids <= 2 then msg:reply('Couldn\'t find enough messages to delete.'); return end
+				if #ids < 2 then msg:reply('Couldn\'t find enough messages to delete.'); return end
 
 				local success = msg.channel:bulkDelete(ids)
 
@@ -94,7 +94,7 @@ return {
 					end
 				end
 
-				if #ids <= 2 then msg:reply('Couldn\'t find enough messages to delete.'); return end
+				if #ids < 2 then msg:reply('Couldn\'t find enough messages to delete.'); return end
 
 				local success = msg.channel:bulkDelete(ids)
 
@@ -130,7 +130,7 @@ return {
 					end
 				end
 
-				if #ids <= 2 then msg:reply('Couldn\'t find enough messages to delete.'); return end
+				if #ids < 2 then msg:reply('Couldn\'t find enough messages to delete.'); return end
 
 				local success = msg.channel:bulkDelete(ids)
 
