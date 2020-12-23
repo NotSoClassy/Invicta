@@ -5,7 +5,7 @@ return {
 	description = 'Restarts the bot.',
 	hidden = true,
 	hooks = {check = ownerOnly},
-	execute = function()
-		return os.exit()
+	execute = function(_, _, _, conn)
+		return conn:close(), os.exit()
 	end
 }

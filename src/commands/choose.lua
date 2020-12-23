@@ -1,9 +1,9 @@
 return {
 	name = 'choose',
 	description = 'Chooses a random choice',
-	example = '<choice1> <choice2> [choice3] ...',
+	args = {{ name = 'choices', value = '...' }},
 	execute = function(msg, args)
-		if #args < 2 then return msg:reply('You need to provide at least 2 choices.') end
+		if #args.choices < 2 then return msg:reply('You need to provide at least 2 choices.') end
 		msg:reply(args[math.random(#args)])
 	end
 }

@@ -2,7 +2,6 @@ local moduleHandler = require '../../moduleHandler'
 local toast = require 'toast'
 local json = require 'json'
 
-local concat, remove = table.concat, table.remove
 local perms = {'administrator'}
 
 local blacklistedCommands = {
@@ -46,9 +45,9 @@ end
 return {
 	name = 'settings',
 	description = 'List of customizable settings.',
-	example = '[setting]',
+	args = {{ name = 'setting', value = 'string' }},
 	execute = function(msg, args, settings)
-		local query = concat(args, ' '):lower()
+		local query = args.setting
 		local coloum = settingColumns[query]
 
 		if coloum then
@@ -77,13 +76,22 @@ return {
 		{
 			name = 'set',
 			description = 'Change the value of a setting.',
-			example = '<setting> <value>',
 			userPerms = perms,
+			args = {
+				{
+					name = 'setting',
+					value = 'string',
+					required = true
+				},
+				{
+					name = 'value',
+					value = 'any',
+					required = true
+				}
+			},
 			execute = function(msg, args, settings, conn)
-				if #args < 2 then return msg:reply('Missing required arguments (use help command for more info)') end
-
-				local query = remove(args, 1):lower()
-				local value = concat(args, ' ')
+				local query = args.setting
+				local value = args.value
 
 				if not settingColumns[query] then return msg:reply('No setting found for `' .. query .. '`') end
 
@@ -101,9 +109,9 @@ return {
 		{
 			name = 'modules',
 			description = 'A list of all modules.',
-			example = '[module]',
+			args = {{ name = 'module', value = 'string' }},
 			execute = function(msg, args, settings)
-				local query = concat(args, ' '):lower()
+				local query = args.module
 				local mod = moduleHandler.moduleNames[query]
 
 				if mod then
@@ -135,8 +143,9 @@ return {
 					description = 'Enable a disabled module.',
 					example = '<module>',
 					userPerms = perms,
+					args = {{ name = 'module', value = 'string' }},
 					execute = function(msg, args, settings, conn)
-						local query = concat(args, ' '):lower()
+						local query = args.module
 
 						if not moduleHandler.moduleNames[query] then return msg:reply('No module found for `' .. query .. '`') end
 
@@ -149,8 +158,9 @@ return {
 					description = 'Disable a enabled module.',
 					example = '<module>',
 					userPerms = perms,
+					args = {{ name = 'module', value = 'string' }},
 					execute = function(msg, args, settings, conn)
-						local query = concat(args, ' '):lower()
+						local query = args.module
 
 						if not moduleHandler.moduleNames[query] then return msg:reply('No module found for `' .. query .. '`') end
 
@@ -185,8 +195,9 @@ return {
 					description = 'Enables a disabled command.',
 					example = '<command (not an alias)>',
 					userPerms = perms,
+					args = {{ name = 'command', value = 'string' }},
 					execute = function(msg, args, settings, conn)
-						local query = concat(args, ' '):lower()
+						local query = args.command
 						local command
 
 						for _, v in ipairs(msg.client.commands) do
@@ -210,8 +221,9 @@ return {
 					description = 'Disables a enabled command.',
 					example = '<command (not an alias)>',
 					userPerms = perms,
+					args = {{ name = 'command', value = 'string' }},
 					execute = function(msg, args, settings, conn)
-						local query = concat(args, ' '):lower()
+						local query = args.command
 						local command
 
 						if blacklistedCommands[query] then return msg:reply('You aren\'t allowed to disable this command') end

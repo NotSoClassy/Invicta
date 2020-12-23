@@ -8,17 +8,22 @@ local hooks = {postCommand = function(_, msg)
 	timer.sleep(3000)
 	msg:delete()
 end}
+local amount = {
+	name = 'amount',
+	value = 'number',
+	default = 50
+}
 
 return {
 	name = 'purge',
 	description = 'Delete most recent messages. (Messages 2 weeks or older will be ignored, this applies for the sub commands too)',
-	example = '[2-100]',
 	userPerms = perms,
 	botPerms = perms,
 	hooks = hooks,
 	aliases = {'prune'},
+	args = {amount},
 	execute = function(msg, args)
-		local amount = args[1] and tonumber(args[1]) or 50
+		local amount = args.amount
 
 		if amount < 2 or amount > 100 then msg:reply('The amount must be in between 2-100.'); return end
 
@@ -43,21 +48,28 @@ return {
 		{
 			name = 'match',
 			description = 'Delete every message that matches with a RegExp.',
-			example = '<RegExp> [2-100]',
 			userPerms = perms,
 			botPerms = perms,
 			hooks = hooks,
+			args = {
+				{
+					name = 'regexp',
+					value = 'any',
+					required = true
+				},
+				amount
+			},
 			execute = function(msg, args)
-				local amount = args[2] and tonumber(args[2]) or 50
+				local amount = args.amount
 
 				if amount < 2 or amount > 100 then msg:reply('The amount must be inbetween 2-100'); return end
-				if not pcall(rex.find, '', args[1]) then msg:reply('Invalid Regex'); return end
+				if not pcall(rex.find, '', args.regexp) then msg:reply('Invalid Regex'); return end
 
 				msg:delete()
 
 				local ids = {}
 				for msg in msg.channel:getMessages(amount):iter() do
-					if rex.find(msg.content, args[1]) and util.canBulkDelete(msg) then
+					if rex.find(msg.content, args.regexp) and util.canBulkDelete(msg) then
 						table.insert(ids, msg.id)
 					end
 				end
@@ -74,14 +86,21 @@ return {
 		{
 			name = 'find',
 			description = 'Delete every message that has the provided text in it.',
-			example = '<text to find> [2-100]',
 			userPerms = perms,
 			botPerms = perms,
 			hooks = hooks,
+			args = {
+				{
+					name = 'text',
+					value = 'any',
+					required = true
+				},
+				amount
+			},
 			execute = function(msg, args)
 				if #args < 1 then msg:reply('Missing required arguments'); return end
 
-				local amount = args[2] and tonumber(args[2]) or 50
+				local amount = args.amount
 
 				if amount < 2 or amount > 100 then msg:reply('The amount must be in between 2-100'); return end
 
@@ -89,7 +108,7 @@ return {
 
 				local ids = {}
 				for msg in msg.channel:getMessages(amount):iter() do
-					if string.find(msg.content, args[1]) and util.canBulkDelete(msg) then
+					if string.find(msg.content, args.text) and util.canBulkDelete(msg) then
 						table.insert(ids, msg.id)
 					end
 				end
@@ -106,20 +125,23 @@ return {
 		{
 			name = 'from',
 			description = 'Delete every message that was sent by the member provided',
-			example = '<user> [2-100]',
 			userPerms = perms,
 			botPerms = perms,
 			hooks = hooks,
+			args = {
+				{
+					name = 'member',
+					value = 'member',
+					required = true
+				},
+				amount
+			},
 			execute = function(msg, args)
-				if #args < 1 then msg:reply('Missing required arguments'); return end
-
-				local amount = args[2] and tonumber(args[2]) or 50
+				local amount = args.amount
 
 				if amount < 2 or amount > 100 then msg:reply('The amount must be in between 2-100'); return end
 
-				local member, err = util.searchMember(msg, args[1])
-
-				if not member then msg:reply(err); return end
+				local member = args.member
 
 				msg:delete()
 

@@ -1,5 +1,7 @@
 local toast = require 'toast'
 
+local f = string.format
+
 local function shrink(content, pos)
     if #content > pos then
         return string.sub(content, 0, pos - 3) .. '...'
@@ -8,7 +10,7 @@ local function shrink(content, pos)
     end
 end
 
-local function embedGen(self, usage)
+local function embedGen(self, usage, prefix)
     local aliases = table.concat(self._aliases, ', ')
     local perms = table.concat(self._userPerms, ', ')
     local other = self._nsfw and 'NSFW only'
@@ -16,6 +18,13 @@ local function embedGen(self, usage)
 
     for _, cmd in pairs(self._subCommands) do
         sub = sub .. shrink('**' .. cmd.name .. '** - ' .. cmd.description, 61) .. '\n'
+    end
+
+    if self._example == '' and #self._args > 0 then
+        usage = prefix .. self._name
+        for _, arg in ipairs(self._args) do
+            usage = usage .. ' ' .. (arg.required and f('<%s: %s>', arg.name, arg.value) or f('[%s: %s]', arg.name, arg.value))
+        end
     end
 
     return toast.Embed()
@@ -56,12 +65,12 @@ return toast.Command('help', {
 
             for _, sub in ipairs(args) do
                 local temp = findCommand(command.subCommands, sub)
-                if not temp then usage = toast.util.getPrefix(msg) .. command.name break end
+                if not temp then break end
                 usage = usage .. ' ' .. temp.name
                 command = temp or command
             end
 
-            return embedGen(command, usage):send(msg.channel)
+            return embedGen(command, usage, prefix):send(msg.channel)
         else
             local description = ''
 

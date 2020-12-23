@@ -1,12 +1,12 @@
 return {
 	name = 'prefix',
 	description = 'Change the bot prefix for the guild.',
-	example = '[prefix]',
 	userPerms = {'administrator'},
+	args = {{name = 'prefix', value = 'any'}},
 	execute = function(msg, args, settings, conn)
-		local prefix = table.concat(args, ' ')
+		local prefix = args.prefix
 
-		if #prefix == 0 then return msg:reply('The current prefix is `' .. settings.prefix .. '`') end
+		if not prefix or #prefix == 0 then return msg:reply('The current prefix is `' .. settings.prefix .. '`') end
 		if prefix == settings.prefix then return msg:reply('The prefix is already `' .. prefix .. '`') end
 
 		local stmt = conn:prepare('UPDATE guild_settings SET prefix = ? WHERE guild_id = ?;')

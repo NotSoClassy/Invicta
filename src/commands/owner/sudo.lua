@@ -28,7 +28,7 @@ local function hasPerms(member, channel, perms)
 return {
 	name = 'sudo',
 	description = 'Runs a command without checking user permissions',
-	example = '[command] [...command args]',
+	example = '[command] [...subcommands] [...command args]',
 	hidden = true,
 	hooks = {check = ownerOnly},
 	execute = function(msg, args, settings, conn)

@@ -61,7 +61,7 @@ return function(msg, conn)
 
 	if not prefix then return end
 
-	local cmd, msgArg = string.match(msg.cleanContent:sub(#pre + 1), '^(%S+)%s*(.*)')
+	local cmd, msgArg = string.match(msg.content:sub(#pre + 1), '^(%S+)%s*(.*)')
 
 	if not cmd then return end
 
@@ -96,6 +96,16 @@ return function(msg, conn)
 	   local _, time = command:onCooldown(msg.author.id)
 	   return msg:reply(toast.util.errorEmbed('Slow down, you\'re on cooldown', 'Please wait ' .. toast.util.formatLongfunction(time)))
 	end
+
+	if self._toastOptions.advancedArgs and #command.args > 0 then
+		local parsed, err = toast.argparser.parse(msg, args, command)
+
+		if err then
+		   return msg:reply(toast.util.errorEmbed('Error with arguments', err))
+		end
+
+		args = parsed
+	 end
 
 	command.hooks.preCommand(msg)
 

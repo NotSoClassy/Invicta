@@ -30,11 +30,12 @@ end
 return {
 	name = 'eval',
 	description = 'Evaluates lua code.',
+	example = '[arg]',
 	hidden = true,
 	aliases = {'exec'},
 	hooks = {check = ownerOnly},
-	execute = function(msg, args, _, conn)
-		local arg = table.concat(args, ' ')
+	execute = function(msg, _, settings, conn)
+		local arg = msg.content:sub(#settings.prefix, #msg.content):match('%S+%s*(.*)') -- because the regex matching gets rid of "" and ''
 
 		if not arg or #arg == 0 then return end
 
