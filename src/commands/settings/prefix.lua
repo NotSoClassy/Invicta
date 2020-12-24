@@ -2,7 +2,7 @@ return {
 	name = 'prefix',
 	description = 'Change the bot prefix for the guild.',
 	userPerms = {'administrator'},
-	args = {{name = 'prefix', value = 'any'}},
+	args = {{name = 'prefix', value = 'string'}},
 	execute = function(msg, args, settings, conn)
 		local prefix = args.prefix
 

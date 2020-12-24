@@ -54,7 +54,7 @@ return {
 			args = {
 				{
 					name = 'regexp',
-					value = 'any',
+					value = 'string',
 					required = true
 				},
 				amount
@@ -92,7 +92,7 @@ return {
 			args = {
 				{
 					name = 'text',
-					value = 'any',
+					value = 'string',
 					required = true
 				},
 				amount

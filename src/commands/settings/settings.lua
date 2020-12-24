@@ -85,7 +85,7 @@ return {
 				},
 				{
 					name = 'value',
-					value = 'any',
+					value = 'string',
 					required = true
 				}
 			},

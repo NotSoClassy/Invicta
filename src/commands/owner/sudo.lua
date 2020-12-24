@@ -1,5 +1,5 @@
 local class = require 'discordia' .class
-local util = require 'toast' .util
+local toast = require 'toast'
 local ownerOnly = require '../checks/ownerOnly'
 
 local function search(tbl, q)
@@ -44,6 +44,8 @@ return {
 			end
 		end
 
+		if not command then return msg:reply('Command not found') end
+
 		local cmdArgs
 
 		for i = 1, #args + 1 do
@@ -53,8 +55,18 @@ return {
 		end
 
 		if not hasPerms(msg.guild:getMember(msg.client.user.id), msg.channel, command.botPerms) then
-			return msg:reply(util.errorEmbed(nil, 'I am missing permission to run this command (' .. table.concat(command.botPerms, ', ') .. ')'))
+			return msg:reply(toast.util.errorEmbed(nil, 'I am missing permission to run this command (' .. table.concat(command.botPerms, ', ') .. ')'))
 		end
+
+		if msg.client._toastOptions.advancedArgs and #command.args > 0 then
+			local parsed, err = toast.argparser.parse(msg, cmdArgs, command)
+
+			if err then
+			   return msg:reply(toast.util.errorEmbed('Error with arguments', err))
+			end
+
+			cmdArgs = parsed
+		 end
 
 		command.hooks.preCommand(msg)
 
