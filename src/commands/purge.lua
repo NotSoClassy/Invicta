@@ -16,8 +16,7 @@ local amountArg = {
 
 return {
 	name = 'purge',
-	description = 'Delete most recent messages. (Messages 2 weeks or older will be ignored, '
-		.. ' this applies for the sub commands too)',
+	description = 'Delete most recent messages. (Messages 2 weeks or older will be ignored, this applies for the sub commands too)',
 	userPerms = perms,
 	botPerms = perms,
 	hooks = hooks,

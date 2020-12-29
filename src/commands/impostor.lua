@@ -1,3 +1,4 @@
+local urlencode = require 'querystring' .urlencode
 local http = require 'coro-http'
 
 local f = string.format
@@ -15,17 +16,17 @@ return {
 			default = function(msg) return msg.member end
 		},
 		{
-			name = 'isImposter',
+			name = 'isImpostor',
 			value = 'boolean',
-			default = false
+			default = true
 		}
 	},
 	execute = function(msg, args)
 
 		local target = args.target
 		local url = baseURL .. f('impostor?avatar=%s&name=%s&impostor=%s',
-			target.avatarURL,
-			target.name,
+			urlencode(target.user.avatarURL),
+			urlencode(target.name),
 			tostring(args.isImposter)
 		)
 
