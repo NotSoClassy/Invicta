@@ -8,7 +8,7 @@ local hooks = {postCommand = function(_, msg)
 	timer.sleep(3000)
 	msg:delete()
 end}
-local amount = {
+local amountArg = {
 	name = 'amount',
 	value = 'number',
 	default = 50
@@ -16,12 +16,13 @@ local amount = {
 
 return {
 	name = 'purge',
-	description = 'Delete most recent messages. (Messages 2 weeks or older will be ignored, this applies for the sub commands too)',
+	description = 'Delete most recent messages. (Messages 2 weeks or older will be ignored, '
+		.. ' this applies for the sub commands too)',
 	userPerms = perms,
 	botPerms = perms,
 	hooks = hooks,
 	aliases = {'prune'},
-	args = {amount},
+	args = {amountArg},
 	execute = function(msg, args)
 		local amount = args.amount
 
@@ -30,9 +31,9 @@ return {
 		msg:delete()
 
 		local ids = {}
-		for msg in msg.channel:getMessages(amount):iter() do
-			if util.canBulkDelete(msg) then
-				table.insert(ids, msg.id)
+		for m in msg.channel:getMessages(amount):iter() do
+			if util.canBulkDelete(m) then
+				table.insert(ids, m.id)
 			end
 		end
 
@@ -57,7 +58,7 @@ return {
 					value = 'string',
 					required = true
 				},
-				amount
+				amountArg
 			},
 			execute = function(msg, args)
 				local amount = args.amount
@@ -68,9 +69,9 @@ return {
 				msg:delete()
 
 				local ids = {}
-				for msg in msg.channel:getMessages(amount):iter() do
-					if rex.find(msg.content, args.regexp) and util.canBulkDelete(msg) then
-						table.insert(ids, msg.id)
+				for m in msg.channel:getMessages(amount):iter() do
+					if rex.find(m.content, args.regexp) and util.canBulkDelete(msg) then
+						table.insert(ids, m.id)
 					end
 				end
 
@@ -95,7 +96,7 @@ return {
 					value = 'string',
 					required = true
 				},
-				amount
+				amountArg
 			},
 			execute = function(msg, args)
 				if #args < 1 then msg:reply('Missing required arguments'); return end
@@ -107,9 +108,9 @@ return {
 				msg:delete()
 
 				local ids = {}
-				for msg in msg.channel:getMessages(amount):iter() do
-					if string.find(msg.content, args.text) and util.canBulkDelete(msg) then
-						table.insert(ids, msg.id)
+				for m in msg.channel:getMessages(amount):iter() do
+					if string.find(m.content, args.text) and util.canBulkDelete(msg) then
+						table.insert(m, msg.id)
 					end
 				end
 
@@ -134,7 +135,7 @@ return {
 					value = 'member',
 					required = true
 				},
-				amount
+				amountArg
 			},
 			execute = function(msg, args)
 				local amount = args.amount
@@ -146,9 +147,9 @@ return {
 				msg:delete()
 
 				local ids = {}
-				for msg in msg.channel:getMessages(amount):iter() do
-					if msg.author.id == member.id and util.canBulkDelete(msg) then
-						table.insert(ids, msg.id)
+				for m in msg.channel:getMessages(amount):iter() do
+					if m.author.id == member.id and util.canBulkDelete(msg) then
+						table.insert(ids, m.id)
 					end
 				end
 
