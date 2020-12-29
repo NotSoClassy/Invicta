@@ -1,4 +1,4 @@
-local toast = require 'toast'
+local http = require 'coro-http'
 
 local f = string.format
 
@@ -29,10 +29,13 @@ return {
 			tostring(args.isImposter)
 		)
 
-		return toast.Embed()
-			:setTitle('Amoung Us')
-			:setImage(url)
-			:setColor('random')
-			:send(msg.channel)
+		local res, body = http.request('GET', url)
+
+		if not body or res.code ~= 200 then return msg:reply('An error has occured with the API.') end
+
+		return msg:reply {
+			file = { 'impostor.gif', body }
+		}
+
 	end
 }
