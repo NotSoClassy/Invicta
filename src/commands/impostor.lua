@@ -24,10 +24,10 @@ return {
 	execute = function(msg, args)
 
 		local target = args.target
-		local url = baseURL .. f('impostor?avatar=%s&name=%s&impostor=%s',
+		local url = baseURL .. f('impostor?avatar=%s&name=%s%s',
 			urlencode(target.user.avatarURL),
 			urlencode(target.name),
-			tostring(args.isImposter)
+			args.isImpostor and '&impostor=true' or ''
 		)
 
 		local res, body = http.request('GET', url)
