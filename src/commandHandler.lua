@@ -91,21 +91,33 @@ return function(msg, conn)
 		local guild = msg.guild
 
 		local vars = {
-			author = { name = author.name, mentionString = author.mentionString, id = author.id, tag = author.tag},
-			guild = { name = guild.name, id = guild.id }
+			message = { id = msg.id, content = msg.content, link = msg.link },
+			author = { name = author.name, mentionString = author.mentionString, id = author.id, tag = author.tag },
+			guild = { name = guild.name, id = guild.id },
+			args = { }
 		}
+
+		-- So args can be indexed with string numbers
+		for i, v in ipairs(args) do
+			vars.args[tostring(i)] = v
+		end
+
+		-- Other stuff
+		vars.message.author = vars.author
+		vars.message.guild = vars.guild
+		vars.msg = vars.message
 
 		local content = rex.gsub(cc.command, '{(.*?)}', function(str)
 			local value
 			for i in string.gmatch(str, '[^%.]+') do
-				if value and not value[i] and not vars[i] then
+				if (value and not value[i]) or (not value and not vars[i]) then
 					value = 'undefined'
 					break
 				else
 					value = value and value[i] or vars[i]
 				end
 			end
-			return value
+			return tostring(value)
 		end)
 
 		return msg:reply(content)
