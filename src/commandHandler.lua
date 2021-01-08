@@ -92,24 +92,18 @@ return function(msg, conn)
 
 		local vars = {
 			author = { name = author.name, mentionString = author.mentionString, id = author.id, tag = author.tag},
-			guild = { name = guild.name, id = guild.id }
+			guild = { name = guild.name, id = guild.id },
+			pp = 'pp'
 		}
 
 		local content = rex.gsub(cc.command, '{(.*?)}', function(str)
 			local value
 			for i in string.gmatch(str, '[^%.]+') do
-				if value then
-					if not value[i] then
-						value = 'undefined'
-						break
-					end
-					value = value[i]
+				if value and not value[i] and not vars[i] then
+					value = 'undefined'
+					break
 				else
-					if not vars[i] then
-						value = 'undefined'
-						break
-					end
-					value = vars[i]
+					value = value and value[i] or vars[i]
 				end
 			end
 			return value
