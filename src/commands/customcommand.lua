@@ -18,9 +18,17 @@ return {
         }
     },
     execute = function(msg, args, settings, conn)
-        local cc = { name = args.commandName:lower(), command = args.commandString }
+        local name = args.commandName:lower()
 
-        settings.custom_commands[cc.name] = cc
+        for _, v in ipairs(msg.commands) do
+            if v.name == name then
+                return msg:reply('A command with that name already exists')
+            end
+        end
+
+        local cc = { name = name, command = args.commandString }
+
+        settings.custom_commands[name] = cc
 
         local encoded = json.encode(settings.custom_commands)
 
