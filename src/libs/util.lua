@@ -3,8 +3,9 @@ local json = require 'json'
 
 local util = {}
 local jsonColumns = {
+	disabled_commands = true,
 	disabled_modules = true,
-	disabled_commands = true
+	custom_commands = true
 }
 
 local levenshtein = discordia.extensions.string.levenshtein

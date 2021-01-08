@@ -3,6 +3,7 @@ local discordia = require 'discordia'
 local toast = require 'toast'
 local json = require 'json'
 local util = require 'util'
+local rex = require 'rex'
 
 local class, enums = discordia.class, discordia.enums
 
@@ -78,6 +79,43 @@ return function(msg, conn)
 			command = v
 			break
 		end
+	end
+
+	if not command then
+
+		local cc = settings.custom_commands[cmd]
+
+		if not cc then return end
+
+		local author = msg.author
+		local guild = msg.guild
+
+		local vars = {
+			author = { name = author.name, mentionString = author.mentionString, id = author.id, tag = author.tag},
+			guild = { name = guild.name, id = guild.id }
+		}
+
+		local content = rex.gsub(cc.command, '{(.*?)}', function(str)
+			local value
+			for i in string.gmatch(str, '[^%.]+') do
+				if value then
+					if not value[i] then
+						value = 'undefined'
+						break
+					end
+					value = value[i]
+				else
+					if not vars[i] then
+						value = 'undefined'
+						break
+					end
+					value = vars[i]
+				end
+			end
+			return value
+		end)
+
+		return msg:reply(content)
 	end
 
 	if not command or settings.disabled_commands[command.name] then return end
