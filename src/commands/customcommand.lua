@@ -18,7 +18,7 @@ return {
         }
     },
     execute = function(msg, args, settings, conn)
-        local cc = { name = args.commandName, command = args.commandString }
+        local cc = { name = args.commandName:lower(), command = args.commandString }
 
         settings.custom_commands[cc.name] = cc
 
