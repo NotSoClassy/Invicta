@@ -20,7 +20,7 @@ return {
     execute = function(msg, args, settings, conn)
         local name = args.commandName:lower()
 
-        for _, v in ipairs(msg.commands) do
+        for _, v in ipairs(msg.client.commands) do
             if v.name == name then
                 return msg:reply('A command with that name already exists')
             end
