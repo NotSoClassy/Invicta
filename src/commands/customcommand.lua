@@ -1,5 +1,13 @@
 local json = require 'json'
 
+local function search(tbl, q)
+	for i, v in pairs(tbl) do
+		if q == v then
+		   return i
+		end
+	 end
+end
+
 return {
 	name = 'customcommand',
     description = 'Make custom commands.',
@@ -21,7 +29,7 @@ return {
         local name = args.commandName:lower()
 
         for _, v in ipairs(msg.client.commands) do
-            if v.name == name then
+            if v.name == name or search(v.aliases, name) then
                 return msg:reply('A command with that name already exists')
             end
         end
