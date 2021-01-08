@@ -92,8 +92,7 @@ return function(msg, conn)
 
 		local vars = {
 			author = { name = author.name, mentionString = author.mentionString, id = author.id, tag = author.tag},
-			guild = { name = guild.name, id = guild.id },
-			pp = 'pp'
+			guild = { name = guild.name, id = guild.id }
 		}
 
 		local content = rex.gsub(cc.command, '{(.*?)}', function(str)
