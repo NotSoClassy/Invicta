@@ -1,7 +1,4 @@
 local toast = require 'toast'
-local ffi = require 'ffi'
-
-local osInfo = string.format('Hosted on %s %s using %s', ffi.os, ffi.arch, _VERSION)
 
 return {
 	name = 'stats',
@@ -13,7 +10,7 @@ return {
 			:addField('Guilds:', tostring(#client.guilds), true)
 			:addField('Shards:', (tostring(client.shardCount) or '1') ..' / '.. (tostring(client.totalShardCount) or '1'), true)
 			:addField('Uptime:', toast.util.formatLongfunction(math.floor(msg.client.uptime:getTime():toMilliseconds())), true)
-			:addField('Other:', osInfo)
+			:addField('Other:', 'This bot is written in ' .. _VERSION)
 			:setFooter(client.user.name .. ' has ' .. #client.commands .. ' commands')
 			:setColor('DARK_AQUA')
 			:send(msg.channel)
