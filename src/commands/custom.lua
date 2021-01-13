@@ -9,7 +9,7 @@ local function search(tbl, q)
 end
 
 return {
-	name = 'customcommand',
+	name = 'custom',
     description = 'Make custom commands.',
     userPerms = {'administrator'},
     aliases = {'cc'},
