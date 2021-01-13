@@ -1,4 +1,4 @@
-local baseURL = 'https://discord.com/api/oauth2/authorize?client_id=%s&permissions=8&scope=bot'
+local baseURL = 'Invite the bot with this link\n<https://discord.com/api/oauth2/authorize?client_id=%s&permissions=8&scope=bot>'
 
 return {
     name = 'invite',
