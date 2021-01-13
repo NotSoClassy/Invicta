@@ -33,7 +33,7 @@ return {
 
 		local res, body = http.request('GET', url)
 
-		if not body or res.code ~= 200 then return msg:reply('An error has occured with the API.') end
+		if not body or res.code ~= 200 then return msg:reply('An error has occured with the API. (Most likely ratelimited)') end
 
 		return msg:reply {
 			file = { 'impostor.gif', body }

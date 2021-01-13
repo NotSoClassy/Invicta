@@ -3,6 +3,7 @@ local baseURL = 'Invite the bot with this link\n<https://discord.com/api/oauth2/
 return {
     name = 'invite',
     description = 'Invite link for the bot.',
+    hidden = true,
     execute = function(msg)
         msg:reply(string.format(baseURL, msg.client.user.id))
     end
