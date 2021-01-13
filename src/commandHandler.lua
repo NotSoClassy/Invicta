@@ -87,6 +87,14 @@ return function(msg, conn)
 
 		if not cc then return end
 
+		args = {}
+		local i = 0
+
+		for arg in rex.gmatch(msgArg, [[(?|"(.+?)"|'(.+?)'|(\S+))]]) do
+			i = i + 1
+			args[tostring(i)] = arg
+		end
+
 		local author = msg.author
 		local guild = msg.guild
 
@@ -94,13 +102,8 @@ return function(msg, conn)
 			message = { id = msg.id, content = msg.content, link = msg.link },
 			author = { name = author.name, mentionString = author.mentionString, id = author.id, tag = author.tag },
 			guild = { name = guild.name, id = guild.id },
-			args = { }
+			args = args
 		}
-
-		-- So args can be indexed with string numbers
-		for i, v in ipairs(args) do
-			vars.args[tostring(i)] = v
-		end
 
 		-- Other stuff
 		vars.message.author = vars.author
