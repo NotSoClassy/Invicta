@@ -9,6 +9,7 @@ return {
 	name = 'impostor',
 	description = 'Make an Amoung Us impostor GIF',
 	cooldown = 5000,
+	aliases = {'imposter'},
 	args = {
 		{
 			name = 'target',
