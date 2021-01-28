@@ -5,6 +5,6 @@ return {
     description = 'Invite link for the bot.',
     hidden = true,
     execute = function(msg)
-        msg:reply(string.format(baseURL, msg.client.user.id))
+        return msg:reply(string.format(baseURL, msg.client.user.id))
     end
 }
