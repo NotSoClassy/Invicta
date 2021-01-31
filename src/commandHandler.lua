@@ -142,18 +142,25 @@ return function(msg, conn)
 	   return msg:reply(toast.util.errorEmbed('Slow down, you\'re on cooldown', 'Please wait ' .. toast.util.formatLongfunction(time)))
 	end
 
-    if self._toastOptions.advancedArgs then
-        local flags, str = toast.flagparser.parse(table.concat(args, ' '))
 
-        args = {}
+    -- flag parse
+    local flags
+    if command._flag or (self._toastOptions.alwaysFlags and command._flag ~= false) then
+        local flgs, str = toast.flagparser.parse(table.concat(args, ' '))
+
+        flags = flgs
+        args = { flags = flgs }
         for s in string.gmatch(str, '%S+') do
             table.insert(args, s)
         end
+    end
 
+    -- arg parser
+    if self._toastOptions.advancedArgs and #command.args > 0 then
         local parsed, err = toast.argparser.parse(msg, args, command)
 
         if err then
-            return msg:reply(toast.util.errorEmbed('Error with arguments', err))
+            return msg:reply(util.error('Error with arguments', err))
         end
 
         args = parsed
