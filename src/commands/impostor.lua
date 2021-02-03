@@ -24,7 +24,7 @@ return {
 		local url = baseURL .. f('impostor?avatar=%s&name=%s%s',
 			urlencode(target.user.avatarURL),
 			urlencode(target.name),
-			(args.flags.impostor or args.flags.imposter) and '&impostor=true' or ''
+			(args.flags.impostor or args.flags.imposter or args.flags.i) and '&impostor=true' or ''
 		)
 
 		local res, body = http.request('GET', url)
