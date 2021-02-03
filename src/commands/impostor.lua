@@ -15,20 +15,16 @@ return {
 			name = 'target',
 			value = 'member',
 			default = function(msg) return msg.member end
-		},
-		{
-			name = 'isImpostor',
-			value = 'boolean',
-			default = true
 		}
 	},
+	flag = true,
 	execute = function(msg, args)
 
 		local target = args.target
 		local url = baseURL .. f('impostor?avatar=%s&name=%s%s',
 			urlencode(target.user.avatarURL),
 			urlencode(target.name),
-			args.isImpostor and '&impostor=true' or ''
+			(args.flags.impostor or args.flags.imposter) and '&impostor=true' or ''
 		)
 
 		local res, body = http.request('GET', url)
