@@ -12,7 +12,6 @@ local conn = sql.open 'invicta.db'
 local clock = discordia.Clock()
 local client = toast.Client {
 	prefix = config.prefix,
-	advancedArgs = true,
 	commandHandler = function(msg)
 		return commandHandler(msg, conn)
 	end

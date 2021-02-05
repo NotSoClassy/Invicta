@@ -24,6 +24,10 @@ local function findSub(tbl, q)
 	end
 end
 
+local function parserErr(err)
+    return util.error('Error while parsing', f('Your command should be formatted like\n`%s`', err))
+end
+
 local function setupGuild(id, conn)
 	local disabled = {}
 	for _, mod in pairs(moduleHandler.modules) do
@@ -143,10 +147,14 @@ return function(msg, conn)
 	end
 
 
-    -- flag parse
+    -- flag parser
     local flags
-    if command._flag or (self._toastOptions.alwaysFlags and command._flag ~= false) then
-        local flgs, str = toast.flagparser.parse(table.concat(args, ' '))
+    if command._flags then
+        local flgs, str = toast.flagParser.parse(msg, table.concat(args, ' '), command)
+
+        if flgs == nil then
+            return msg:reply(parserErr(prefix .. str))
+        end
 
         flags = flgs
         args = { flags = flgs }
@@ -156,11 +164,11 @@ return function(msg, conn)
     end
 
     -- arg parser
-    if self._toastOptions.advancedArgs and #command.args > 0 then
-        local parsed, err = toast.argparser.parse(msg, args, command)
+    if #command._args > 0 then
+        local parsed, err = util.argparser(msg, args, command)
 
         if err then
-            return msg:reply(util.error('Error with arguments', err))
+            return msg:reply(parserErr(prefix .. err))
         end
 
         args = parsed

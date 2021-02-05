@@ -15,14 +15,29 @@ local responses = {
 	} -- Neutral
 }
 
+local flgs = {
+	{
+		name = 'neutral',
+		type = 'boolean'
+	},
+	{
+		name = 'negative',
+		type = 'boolean'
+	},
+	{
+		name = 'positive',
+		type = 'boolean'
+	}
+}
+
 return {
 	name = '8ball',
 	description = 'Ask the 8ball anything!',
 	example = '<question>',
-	flag = true,
+	flag = flgs,
 	execute = function(msg, args)
 		if #args <= 0 then return msg:reply('You didn\'t ask anything') end
-p(args)
+
 		local flags = args.flags
 		local c = ((flags.p or flags.positive) and 1) or (flags.negative and 2) or (flags.neutral and 3) or math.random(3)
 

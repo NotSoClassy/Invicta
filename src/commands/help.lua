@@ -1,7 +1,5 @@
 local toast = require 'toast'
 
-local f = string.format
-
 local function shrink(content, pos)
     if #content > pos then
         return string.sub(content, 0, pos - 3) .. '...'
@@ -20,11 +18,8 @@ local function embedGen(self, usage, prefix)
         sub = sub .. shrink('**' .. cmd.name .. '** - ' .. cmd.description, 61) .. '\n'
     end
 
-    if self._example == '' and #self._args > 0 then
-        usage = prefix .. self._name
-        for _, arg in ipairs(self._args) do
-            usage = usage .. ' ' .. (arg.required and f('<%s: %s>', arg.name, arg.value) or f('[%s: %s]', arg.name, arg.value))
-        end
+    if self._example == '' and (#self._args > 0 or #self._flags > 0) then
+        usage = prefix .. toast.util.example(self)
     end
 
     return toast.Embed()

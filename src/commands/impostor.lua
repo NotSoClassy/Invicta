@@ -17,7 +17,12 @@ return {
 			default = function(msg) return msg.member end
 		}
 	},
-	flag = true,
+	flags = {
+		{
+			name = 'impostor',
+			value = 'boolean'
+		}
+	},
 	execute = function(msg, args)
 
 		local target = args.target
