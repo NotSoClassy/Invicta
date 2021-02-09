@@ -18,7 +18,7 @@ local function embedGen(self, usage, prefix)
         sub = sub .. shrink('**' .. cmd.name .. '** - ' .. cmd.description, 61) .. '\n'
     end
 
-    if self._example == '' and (#self._args > 0 or #self._flags > 0) then
+    if self._example == '' and (#self._args > 0 or (self._flags and #self._flags > 0)) then
         usage = prefix .. toast.util.example(self)
     end
 
