@@ -165,7 +165,7 @@ return function(msg, conn)
 
     -- arg parser
     if #command._args > 0 then
-        local parsed, err = util.argparser(msg, args, command)
+        local parsed, err = toast.argParser.parse(msg, args, command)
 
         if err then
             return msg:reply(parserErr(prefix .. err))
