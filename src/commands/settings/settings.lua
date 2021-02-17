@@ -46,6 +46,7 @@ return {
 	name = 'settings',
 	description = 'List of customizable settings.',
 	args = {{ name = 'setting', value = 'string' }},
+	aliases = {'config'},
 	execute = function(msg, args, settings)
 		local query = args.setting
 		local coloum = settingColumns[query]
@@ -124,9 +125,9 @@ return {
 				else
 					local description = ''
 
-					for _, mod in pairs(moduleHandler.moduleNames) do
+					for _, v in pairs(moduleHandler.moduleNames) do
 						if not mod.hidden then
-							description = description .. mod.name .. ' : ' .. (settings.disabled_modules[mod.name] and 'disabled' or 'enabled') .. '\n'
+							description = description .. v.name .. ' : ' .. (settings.disabled_modules[v.name] and 'disabled' or 'enabled') .. '\n'
 						end
 					end
 
