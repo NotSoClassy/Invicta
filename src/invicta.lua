@@ -1,4 +1,3 @@
-local commandHandler = require './commandHandler'
 local moduleHandler = require './moduleHandler'
 local discordia = require 'discordia'
 local config = require './config'
@@ -10,14 +9,6 @@ local sql = require 'sqlite3'
 
 local conn = sql.open 'invicta.db'
 local clock = discordia.Clock()
-local client = toast.Client {
-	prefix = config.prefix,
-	commandHandler = function(msg)
-		return commandHandler(msg, conn)
-	end
-}
-
-moduleHandler.load()
 
 local function setupGuild(id)
 	local disabled = {}
@@ -29,6 +20,20 @@ local function setupGuild(id)
 	local encoded = json.encode(disabled)
 	conn:exec('INSERT INTO guild_settings (guild_id, disabled_modules) VALUES (\''..id..'\', \'' .. encoded .. '\')')
 end
+
+local client = toast.Client {
+	prefix = function(msg)
+		if not util.getGuildSettings(msg.guild.id, conn) then
+			setupGuild(msg.guild.id)
+		end
+		return util.getGuildSettings(msg.guild.id, conn).prefix
+	end,
+	customParams = { function(msg)
+		return util.getGuildSettings(msg.guild.id, conn)
+	end, conn}
+}
+
+moduleHandler.load()
 
 -- Events
 

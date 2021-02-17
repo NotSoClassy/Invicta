@@ -69,9 +69,9 @@ return toast.Command('help', {
         else
             local description = ''
 
-            for _, cmd in pairs(msg.client.commands) do
-                if cmd.hidden == false and not settings.disabled_commands[cmd.name] then
-                    description = description .. shrink('**' .. cmd.name .. '** - ' .. cmd.description, 78) .. '\n'
+            for _, v in pairs(msg.client.commands) do
+                if v.hidden == false and not settings.disabled_commands[v.name] then
+                    description = description .. shrink('**' .. v.name .. '** - ' .. v.description, 78) .. '\n'
                 end
             end
 
