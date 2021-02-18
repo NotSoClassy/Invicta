@@ -8,7 +8,7 @@ local json = require 'json'
 local sql = require 'sqlite3'
 
 local conn = sql.open 'invicta.db'
-local clock = discordia.Clock()
+--local clock = discordia.Clock()
 
 local function setupGuild(id)
 	local disabled = {}
@@ -37,11 +37,13 @@ moduleHandler.load()
 
 -- Events
 
+--[[
 clock:on('min', function()
 	for guild in client.guilds:iter() do
 		moduleHandler.runEvent('clock.min', guild, conn, guild)
 	end
 end)
+]]
 
 client:on('ready', function()
 	client:setGame(config.prefix .. 'help')

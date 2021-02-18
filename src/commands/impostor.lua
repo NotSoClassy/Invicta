@@ -9,6 +9,7 @@ return {
 	name = 'impostor',
 	description = 'Make an Amoung Us impostor GIF',
 	cooldown = 5000,
+	hidden = true,
 	aliases = {'imposter'},
 	args = {
 		{
@@ -26,10 +27,13 @@ return {
 	execute = function(msg, args)
 
 		local target = args.target
+
+		local isImpostor = (args.flags.impostor or args.flags.imposter or args.flags.i) or math.random(10) == 1
+
 		local url = baseURL .. f('impostor?avatar=%s&name=%s%s',
 			urlencode(target.user.avatarURL),
 			urlencode(target.name),
-			(args.flags.impostor or args.flags.imposter or args.flags.i) and '&impostor=true' or ''
+			isImpostor and '&impostor=true' or ''
 		)
 
 		local res, body = http.request('GET', url)
