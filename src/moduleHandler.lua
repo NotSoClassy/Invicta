@@ -15,6 +15,12 @@ function handler.load()
 	end
 end
 
+local function update(conn, what, id)
+	local stmt = conn:prepare('UPDATE guild_settings SET disabled_modules = ? WHERE guild_id = ?;')
+	stmt:reset():bind(what, id):step()
+	stmt:close()
+end
+
 function handler.enable(mod, guild, settings, conn)
 	if not settings.disabled_modules[mod] then return end
 
@@ -22,9 +28,7 @@ function handler.enable(mod, guild, settings, conn)
 	settings.disabled_modules[mod] = nil
 
 	local encoded = json.encode(disabled)
-	local stmt = conn:prepare('UPDATE guild_settings SET disabled_modules = ? WHERE guild_id = ?;')
-	stmt:reset():bind(encoded, guild.id):step()
-	stmt:close()
+	update(conn, encoded, guild.id)
 end
 
 function handler.disable(mod, guild, settings, conn)
@@ -34,9 +38,7 @@ function handler.disable(mod, guild, settings, conn)
 	settings.disabled_modules[mod] = true
 
 	local encoded = json.encode(disabled)
-	local stmt = conn:prepare('UPDATE guild_settings SET disabled_modules = ? WHERE guild_id = ?;')
-	stmt:reset():bind(encoded, guild.id):step()
-	stmt:close()
+	update(conn, encoded, guild.id)
 end
 
 function handler.runEvent(event, guild, conn, ...)

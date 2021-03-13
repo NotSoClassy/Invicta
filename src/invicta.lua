@@ -1,5 +1,4 @@
 local moduleHandler = require './moduleHandler'
-local discordia = require 'discordia'
 local config = require './config'
 local loader = require 'loader'
 local toast = require 'toast'
@@ -8,7 +7,6 @@ local json = require 'json'
 local sql = require 'sqlite3'
 
 local conn = sql.open 'invicta.db'
---local clock = discordia.Clock()
 
 local function setupGuild(id)
 	local disabled = {}
@@ -28,22 +26,12 @@ local client = toast.Client {
 		end
 		return util.getGuildSettings(msg.guild.id, conn).prefix
 	end,
-	customParams = { function(msg)
+	params = {function(msg)
 		return util.getGuildSettings(msg.guild.id, conn)
 	end, conn}
 }
 
 moduleHandler.load()
-
--- Events
-
---[[
-clock:on('min', function()
-	for guild in client.guilds:iter() do
-		moduleHandler.runEvent('clock.min', guild, conn, guild)
-	end
-end)
-]]
 
 client:on('ready', function()
 	client:setGame(config.prefix .. 'help')

@@ -2,6 +2,7 @@ local timer = require 'timer'
 local util = require 'util'
 local rex = require 'rex'
 
+local cooldown = 5000
 local perms = {'manageMessages'}
 local hooks = {postCommand = function(_, msg)
 	if not msg then return end
@@ -16,12 +17,14 @@ local amountArg = {
 
 return {
 	name = 'purge',
-	description = 'Delete most recent messages. (Messages 2 weeks or older will be ignored, this applies for the sub commands too)',
+	description = 'Delete most recent messages. (Messages 2 weeks or older will be ignored, this applies for the sub'
+		.. 'commands too)',
 	userPerms = perms,
 	botPerms = perms,
 	hooks = hooks,
 	aliases = {'prune'},
 	args = {amountArg},
+	cooldown = cooldown,
 	execute = function(msg, args)
 		local amount = args.amount
 
@@ -50,6 +53,7 @@ return {
 			description = 'Delete every message that matches with a RegExp.',
 			userPerms = perms,
 			botPerms = perms,
+			cooldown = cooldown,
 			hooks = hooks,
 			args = {
 				{
@@ -88,6 +92,7 @@ return {
 			description = 'Delete every message that has the provided text in it.',
 			userPerms = perms,
 			botPerms = perms,
+			cooldown = cooldown,
 			hooks = hooks,
 			args = {
 				{
@@ -127,6 +132,7 @@ return {
 			description = 'Delete every message that was sent by the member provided',
 			userPerms = perms,
 			botPerms = perms,
+			cooldown = cooldown,
 			hooks = hooks,
 			args = {
 				{

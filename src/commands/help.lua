@@ -31,7 +31,8 @@ local function embedGen(self, usage, prefix)
        :addField('Permissions:', #perms == 0 and 'None' or perms, true)
        :addField('Sub Commands:', #sub == 0 and 'None' or sub, true)
        :addField('Other:', other and other or 'None', true)
-       :setFooter(self._cooldown ~= 0 and 'This command has a ' .. math.floor(self._cooldown / 1000)  .. ' second cooldown' or 'This command has no cooldown')
+       :setFooter(self._cooldown ~= 0 and 'This command has a ' .. math.floor(self._cooldown / 1000) ..
+            ' second cooldown' or 'This command has no cooldown')
  end
 
 local function findCommand(cmds, q)
@@ -49,6 +50,7 @@ return toast.Command('help', {
     example = '[name | alias]',
     execute = function(msg, args, settings)
         local cmd = table.remove(args, 1)
+
         local prefix = settings.prefix or msg.client.prefix[1]
 
         if cmd and #cmd ~= 0 then
