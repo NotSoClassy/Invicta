@@ -28,7 +28,8 @@ local client = toast.Client {
 	end,
 	params = {function(msg)
 		return util.getGuildSettings(msg.guild.id, conn)
-	end, conn}
+	end, conn},
+    sudo = true
 }
 
 moduleHandler.load()
