@@ -32,6 +32,7 @@ local client = toast.Client {
 		return util.getGuildSettings(msg.guild.id, conn)
 	end, conn},
     sudo = true,
+	mentionPrefix = true,
 	cacheAllMembers = true
 }
 
