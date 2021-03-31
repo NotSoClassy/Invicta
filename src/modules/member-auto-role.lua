@@ -1,5 +1,4 @@
 local toast = require 'toast'
-
 return {
 	name = 'member-auto-role',
 	description = 'Gives the auto role if it\'s set.',
@@ -7,7 +6,7 @@ return {
 	hidden = false,
 	disabledByDefault = true,
 	execute = function(member, settings)
-		if not settings.auto_role then return end
+		if not settings.auto_role then return true, 'Missing role' end
 
 		local me = member.guild.members:get(member.guild.client.user.id)
 
@@ -15,7 +14,7 @@ return {
 
 		local role = member.guild:getRole(settings.auto_role)
 
-		if not role then return end
+		if not role then return true, 'Invalid role' end
 
 		return member:addRole(role.id)
 	end

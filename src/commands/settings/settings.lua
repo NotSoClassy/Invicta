@@ -28,6 +28,12 @@ local settingColumns = {
 		args = '<role id>',
 		modules = {'member-auto-role'}
 	},
+	mute_role = {
+		name = 'mute_role',
+		description = 'Set the role that is given when the mute command is ran.',
+		args = '<role id>',
+		modules = {}
+	},
 	prefix = {
 		name = 'prefix',
 		description = 'The prefix for the bot. (The prefix command is better)',
@@ -126,8 +132,9 @@ return {
 					local description = ''
 
 					for _, v in pairs(moduleHandler.moduleNames) do
-						if not mod.hidden then
-							description = description .. v.name .. ' : ' .. (settings.disabled_modules[v.name] and 'disabled' or 'enabled') .. '\n'
+						if not v.hidden then
+							description = description .. v.name .. ' : ' .. (settings.disabled_modules[v.name] and 'disabled' or 'enabled')
+								.. '\n'
 						end
 					end
 
@@ -179,7 +186,8 @@ return {
 
 				for _, v in ipairs(msg.client.commands) do
 					if not v.hidden then
-						description = description .. v.name .. ' : ' .. (settings.disabled_commands[v.name] and 'disabled' or 'enabled') .. '\n'
+						description = description .. v.name .. ' : ' .. (settings.disabled_commands[v.name] and 'disabled' or 'enabled')
+							.. '\n'
 					end
 				end
 

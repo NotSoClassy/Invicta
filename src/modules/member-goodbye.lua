@@ -7,11 +7,11 @@ return {
 	hidden = false,
 	disabledByDefault = true,
 	execute = function(member, settings)
-		if not settings.welcome_channel then return end
+		if not settings.welcome_channel then return true, 'Missing channel' end
 
 		local chnl = member.guild:getChannel(settings.welcome_channel)
 
-		if not chnl then return end
+		if not chnl then return true, 'Invalid channel' end
 
 		return util.safeSend(chnl, 'Goodbye ' .. member.tag .. ', sad to see you go.')
 	end

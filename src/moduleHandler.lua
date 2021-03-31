@@ -2,6 +2,8 @@ local loader = require 'loader'
 local json = require 'json'
 local util = require 'util'
 
+local format = string.format
+
 local handler = {
 	modules = {},
 	moduleNames = {}
@@ -46,7 +48,11 @@ function handler.runEvent(event, guild, conn, ...)
 	local success, err = pcall(function(...)
 		for _, mod in ipairs(handler.modules) do
 			if mod.event == event and not settings.disabled_modules[mod.name] then
-				mod.execute(..., settings, conn)
+				local shouldDisable, reason = mod.execute(..., settings, conn)
+				if shouldDisable == true then
+					handler.disable(mod.name, guild, settings, conn)
+					guild.owner:send(format('module %s was disabled because %s', mod.name, reason))
+				end
 			end
 		end
 	end, ...)

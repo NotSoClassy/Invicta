@@ -1,4 +1,5 @@
 local moduleHandler = require './moduleHandler'
+local discordia = require 'discordia'
 local config = require './config'
 local loader = require 'loader'
 local toast = require 'toast'
@@ -19,6 +20,7 @@ local function setupGuild(id)
 	conn:exec('INSERT INTO guild_settings (guild_id, disabled_modules) VALUES (\''..id..'\', \'' .. encoded .. '\')')
 end
 
+local clock = discordia.Clock()
 local client = toast.Client {
 	prefix = function(msg)
 		if not util.getGuildSettings(msg.guild.id, conn) then
@@ -29,13 +31,21 @@ local client = toast.Client {
 	params = {function(msg)
 		return util.getGuildSettings(msg.guild.id, conn)
 	end, conn},
-    sudo = true
+    sudo = true,
+	cacheAllMembers = true
 }
 
+require 'types' -- load custom types
 moduleHandler.load()
 
 client:on('ready', function()
 	client:setGame(config.prefix .. 'help')
+end)
+
+clock:on('min', function()
+	for guild in client.guilds:iter() do
+		moduleHandler.runEvent('clock.min', guild, conn, guild)
+	end
 end)
 
 client:on('guildCreate', function(guild)
@@ -68,4 +78,5 @@ for _, command in ipairs(loader.load('commands')) do
 	client:addCommand(command)
 end
 
+clock:start()
 client:login(config.token)

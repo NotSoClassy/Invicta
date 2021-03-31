@@ -18,15 +18,15 @@ local responses = {
 local flgs = {
 	{
 		name = 'neutral',
-		type = 'boolean'
+		value = 'boolean'
 	},
 	{
 		name = 'negative',
-		type = 'boolean'
+		value = 'boolean'
 	},
 	{
 		name = 'positive',
-		type = 'boolean'
+		value = 'boolean'
 	}
 }
 
@@ -41,6 +41,6 @@ return {
 		local flags = args.flags
 		local c = ((flags.p or flags.positive) and 1) or (flags.negative and 2) or (flags.neutral and 3) or math.random(3)
 
-		msg:reply(responses[c][math.random(#responses[c])])
+		return msg:reply(responses[c][math.random(#responses[c])])
 	end
 }

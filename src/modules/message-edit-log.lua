@@ -11,7 +11,7 @@ return {
 
 		local chnl = msg.guild:getChannel(settings.log_channel)
 
-		if not chnl then return end
+		if not chnl then return true, 'Invalid channel' end
 
 		local oldContent = msg.oldContent[msg.editedTimestamp]
 		local newContent = msg.content
