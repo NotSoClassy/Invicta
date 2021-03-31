@@ -32,7 +32,7 @@ return {
     execute = function(msg, args, settings, conn)
 
         if not settings.mute_role then return msg:reply('There isn\'t a mute role set.') end
-        if args.target == msg.author then return msg:reply('I am not going to mute you!') end
+        if args.target == msg.member then return msg:reply('I am not going to mute you!') end
         if args.target.bot then return msg:reply('I am not going to mute a bot!') end
         if args.time < 300 then return msg:reply('Mutes under five minutes are not supported!') end
 
