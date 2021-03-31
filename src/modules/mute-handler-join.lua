@@ -5,7 +5,7 @@ return {
 	description = 'This reactives the mute, so when they join back they will get muted/unmuted.',
 	event = 'client.memberLeave',
 	hidden = false,
-	disabledByDefault = false,
+	disabledByDefault = true,
 	execute = function(member, settings, conn)
         if not settings.mute_role then return true, 'Missing role' end
 

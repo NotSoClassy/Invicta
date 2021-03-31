@@ -3,7 +3,7 @@ return {
     description = 'This makes the mute inactive, so once they join back they will be unmuted/muted again.',
 	event = 'client.memberJoin',
 	hidden = false,
-	disabledByDefault = false,
+	disabledByDefault = true,
     execute = function(member, _, conn)
         local entry = conn:exec('SELECT * FROM mutes WHERE guild_id = "' .. member.guild.id .. '"'
             .. ' AND user_id = "'..member.id..'";')

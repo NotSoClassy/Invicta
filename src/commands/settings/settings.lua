@@ -32,7 +32,7 @@ local settingColumns = {
 		name = 'mute_role',
 		description = 'Set the role that is given when the mute command is ran.',
 		args = '<role id>',
-		modules = {}
+		modules = {'mute-handler', 'mute-handler-leave', 'mute-handler-join'}
 	},
 	prefix = {
 		name = 'prefix',

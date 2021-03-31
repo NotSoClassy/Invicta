@@ -5,7 +5,7 @@ return {
 	description = 'This handles the unmuting',
 	event = 'clock.min',
 	hidden = false,
-	disabledByDefault = false,
+	disabledByDefault = true,
 	execute = function(guild, settings, conn)
         if not settings.mute_role then return true, 'Missing role' end
 
