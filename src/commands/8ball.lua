@@ -36,7 +36,7 @@ return {
 	example = '<question>',
 	flag = flgs,
 	execute = function(msg, args)
-		if #args <= 0 then return msg:reply('You didn\'t ask anything') end
+		if #args.ungrouped <= 0 then return msg:reply('You didn\'t ask anything') end
 
 		local flags = args.flags
 		local c = ((flags.p or flags.positive) and 1) or (flags.negative and 2) or (flags.neutral and 3) or math.random(3)
