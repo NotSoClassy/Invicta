@@ -41,7 +41,7 @@ return {
         if not role then return msg:reply('The mute role is invalid!') end
         if not toast.util.manageable(args.target) then
             return msg:reply('I cannot manage this user!')
-        elseif compareRoles(msg.member.highestRole, args.target.highestRole) > 0 then
+        elseif compareRoles(args.target.highestRole, msg.member.highestRole) > 0 then
             return msg:reply('You cannot manage this user!')
         end
 
