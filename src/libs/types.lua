@@ -19,13 +19,17 @@ lens.d = lens.days
 --
 
 toast.types.time = function(arg)
-	local n = tonumber(arg:match('%d+'))
+	local sum = 0
+	local matched
 
-	if not n then return end
+	for n, len in arg:gmatch('%s-(%d+)%s-(%a+)') do
+		if not lens[len] then return end
+		matched = true
+		n = tonumber(n)
+		sum = sum + lens[len](n)
+	end
 
-	local len = arg:match('%d+%s*(.*)')
+	if not matched then return end
 
-	if not len or not lens[len] then return end
-
-	return lens[len](n)
+	return sum
 end
