@@ -4,4 +4,3 @@ config.lua
 *.db
 discordia.log
 gateway.json
-.luacheckrc

@@ -1,7 +1,8 @@
 local moduleHandler = require './moduleHandler'
-local discordia = require 'discordia'
+--local discordia = require 'discordia'
 local config = require './config'
 local loader = require 'loader'
+local timer = require 'timer'
 local toast = require 'toast'
 local util = require 'util'
 local json = require 'json'
@@ -17,10 +18,10 @@ local function setupGuild(id)
 		end
 	end
 	local encoded = json.encode(disabled)
-	conn:exec('INSERT INTO guild_settings (guild_id, disabled_modules) VALUES (\''..id..'\', \'' .. encoded .. '\')')
+	conn:exec('INSERT INTO guild_settings (guild_id, disabled_modules) VALUES ("'..id..'", "' .. encoded .. '")')
 end
 
-local clock = discordia.Clock()
+--local clock = discordia.Clock()
 local client = toast.Client {
 	prefix = function(msg)
 		if not util.getGuildSettings(msg.guild.id, conn) then
@@ -43,10 +44,17 @@ client:on('ready', function()
 	client:setGame(config.prefix .. 'help')
 end)
 
-clock:on('min', function()
+--[[clock:on('sec', function()
 	for guild in client.guilds:iter() do
-		moduleHandler.runEvent('clock.min', guild, conn, guild)
+		moduleHandler.runEvent('', guild, conn, guild)
 	end
+end)]]
+timer.setInterval(5000, function()
+	coroutine.wrap(function()
+		for guild in client.guilds:iter() do
+			moduleHandler.runEvent('mute.handler', guild, conn, guild)
+		end
+	end)()
 end)
 
 client:on('guildCreate', function(guild)
@@ -79,5 +87,5 @@ for _, command in ipairs(loader.load('commands')) do
 	client:addCommand(command)
 end
 
-clock:start()
+--clock:start()
 client:login(config.token)

@@ -1,16 +1,8 @@
-local toast = require 'toast'
-local muteUtil = require 'muteUtil'
-
-local function compareRoles(role1, role2)
-    if role1.position == role2.position then
-        return role2.id - role1.id
-    end
-    return role1.position - role2.position
-end
+local util = require 'muteUtil'
 
 return {
     name = 'mute',
-    description = 'Mutes a member.',
+    description = 'Mutes a member. (unmutes are checked every 5 seconds, so if you put less than that it will still take 5 seconds)',
     args = {
         {
             name = 'target',
@@ -31,30 +23,27 @@ return {
     botPerms = {'manageRoles'},
     execute = function(msg, args, settings, conn)
 
-        if not settings.mute_role then return msg:reply('There isn\'t a mute role set.') end
-        if args.target == msg.member then return msg:reply('I am not going to mute you!') end
-        if args.target.bot then return msg:reply('I am not going to mute a bot!') end
-        if args.time < 300 then return msg:reply('Mutes under five minutes are not supported!') end
-
-        local role = msg.guild:getRole(settings.mute_role)
-
-        if not role then return msg:reply('The mute role is invalid!') end
-        if not toast.util.manageable(args.target) then
-            return msg:reply('I cannot manage this user!')
-        elseif compareRoles(args.target.highestRole, msg.member.highestRole) > 0 then
-            return msg:reply('You cannot manage this user!')
+        local role, err = util.validMute(msg, settings, args)
+        if not role then
+            return msg:reply(err)
         end
 
-        if muteUtil.isMuted(conn, msg.guild.id, args.target.id) then
-            muteUtil.remute(conn, msg.guild.id, args.target.id, args.time)
+        local target = args.target
+
+        if util.isMuted(conn, msg.guild.id, target.id) then
+            util.remute(conn, msg.guild.id, target.id, args.time)
         else
-            muteUtil.mute(conn, msg.guild.id, args.target.id, args.time)
+            util.mute(conn, msg.guild.id, target.id, args.time)
         end
 
         args.target:addRole(role.id)
 
-        args.target:send('You have been muted in %s%s%s', msg.guild.name, args.reason and ' because ' or '.',
-            args.reason or '')
-        return msg:reply(args.target.name .. ' has been muted!')
+        local logs = settings.log_channel and msg.guild:getChannel(settings.log_channel)
+        local reason = args.reason and table.concat(args.reason)
+
+        util.muteEmbed(logs, target.name .. ' has been muted', 'RED', 'Reason: ' .. (reason or 'No reason provided'))
+
+        args.target:send('You have been muted in %s%s%s', msg.guild.name, reason and ' because ' or '.', reason or '')
+        return msg:reply(target.name .. ' has been muted!')
     end
 }

@@ -1,9 +1,10 @@
-local muteUtil = require 'muteUtil'
+local util = require 'muteUtil'
+local f = string.format
 
 return {
 	name = 'mute-handler',
 	description = 'This handles the unmuting',
-	event = 'clock.min',
+	event = 'mute.handler',
 	hidden = false,
 	disabledByDefault = true,
 	execute = function(guild, settings, conn)
@@ -15,28 +16,27 @@ return {
 
         local logs = settings.log_channel and guild:getChannel(settings.log_channel)
 
-        local mutes, nrow = conn:exec('SELECT * FROM mutes WHERE is_active = 1 AND end_timestamp <= ' .. os.time()
-            .. ' AND guild_id = "' .. guild.id .. '";')
+        local mutes, nrow = conn:exec(f('SELECT * FROM mutes WHERE is_active = 1 AND end_timestamp <= %i AND guild_id = "%s";', os.time(), guild.id))
 
         if not mutes then return end
 
         for row = 1, nrow do
-            local member = guild:getMember(mutes.user_id[row])
+            local id = mutes.user_id[row]
+            local member = guild:getMember(id)
 
             if not member then
-                conn:exec('UPDATE mutes SET is_active = 0 WHERE guild_id = "' .. guild.id .. '" '
-                    .. 'AND user_id = "' .. mutes.user_id[row] .. '";')
+                conn:exec(f('UPDATE mutes SET is_active = 0 WHERE guild_id = "%s" AND user_id = "%s";', guild.id, id))
                 goto continue
             end
 
-            local success, err = muteUtil.unmute(conn, guild.id, member, role)
+            local success, err = util.unmute(conn, guild.id, member, role)
 
             if not success then
-                if logs then logs:send('Could not unmute user ' .. member.name .. ' because ' .. err) end
+                util.muteEmbed(logs, 'Could not unmute user ' .. member.name .. ' because ' .. err, 'RED')
                 goto continue
             end
 
-            if logs then logs:send(member.name .. ' has been unmuted') end
+            util.muteEmbed(logs, member.name .. ' has been unmuted', 'YELLOW')
             member:send('You have been unmuted in ' .. guild.name .. '!')
 
             ::continue::

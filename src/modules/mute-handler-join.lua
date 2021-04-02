@@ -1,4 +1,5 @@
-local muteUtil = require 'muteUtil'
+local util = require 'muteUtil'
+local f = string.format
 
 return {
 	name = 'mute-handler-join',
@@ -14,14 +15,13 @@ return {
         if not role then return true, 'Invalid role' end
 
         local logs = settings.log_channel and member.guild:getChannel(settings.log_channel)
+		local entry = conn:exec(f('SELECT * FROM mutes WHERE guild_id = "%s" AND user_id = "%s";', member.guild.id, member.id))
 
-		local entry = conn:exec('SELECT * FROM mutes WHERE guild_id = "'..member.guild.id..'"'
-			.. 'AND user_id = "'..member.id..'";')
 		if entry then
 			local t = entry.end_timestamp[1]
 			if t <= os.time() then
-				muteUtil.unmute(conn, member.guild.id, member, role)
-				if logs then logs:send(member.name .. ' has been unmuted') end
+				util.unmute(conn, member.guild.id, member, role)
+				util.muteEmbed(logs, member.name .. ' has been unmuted', 'YELLOW')
 			else
 				member:addRole(role)
 			end
