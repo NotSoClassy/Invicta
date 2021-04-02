@@ -17,7 +17,7 @@ local function setupGuild(id)
 		end
 	end
 	local encoded = json.encode(disabled)
-	conn:exec('INSERT INTO guild_settings (guild_id, disabled_modules) VALUES ("'..id..'", "' .. encoded .. '")')
+	conn:exec('INSERT INTO guild_settings (guild_id, disabled_modules) VALUES (\''..id..'\', \'' .. encoded .. '\')')
 end
 
 local client = toast.Client {
