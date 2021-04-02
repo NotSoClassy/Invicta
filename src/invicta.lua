@@ -1,5 +1,4 @@
 local moduleHandler = require './moduleHandler'
---local discordia = require 'discordia'
 local config = require './config'
 local loader = require 'loader'
 local timer = require 'timer'
@@ -21,7 +20,6 @@ local function setupGuild(id)
 	conn:exec('INSERT INTO guild_settings (guild_id, disabled_modules) VALUES ("'..id..'", "' .. encoded .. '")')
 end
 
---local clock = discordia.Clock()
 local client = toast.Client {
 	prefix = function(msg)
 		if not util.getGuildSettings(msg.guild.id, conn) then
@@ -44,11 +42,6 @@ client:on('ready', function()
 	client:setGame(config.prefix .. 'help')
 end)
 
---[[clock:on('sec', function()
-	for guild in client.guilds:iter() do
-		moduleHandler.runEvent('', guild, conn, guild)
-	end
-end)]]
 timer.setInterval(5000, function()
 	coroutine.wrap(function()
 		for guild in client.guilds:iter() do
