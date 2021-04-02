@@ -22,10 +22,12 @@ end
 
 local client = toast.Client {
 	prefix = function(msg)
-		if not util.getGuildSettings(msg.guild.id, conn) then
+		local settings = util.getGuildSettings(msg.guild.id, conn)
+		if not settings then
 			setupGuild(msg.guild.id)
+			settings = util.getGuildSettings(msg.guild.id, conn)
 		end
-		return util.getGuildSettings(msg.guild.id, conn).prefix
+		return settings.prefix
 	end,
 	params = {function(msg)
 		return util.getGuildSettings(msg.guild.id, conn)
@@ -45,6 +47,7 @@ end)
 timer.setInterval(5000, function()
 	coroutine.wrap(function()
 		for guild in client.guilds:iter() do
+			if not util.getGuildSettings(guild.id, conn) then setupGuild(guild.id) end
 			moduleHandler.runEvent('mute.handler', guild, conn, guild)
 		end
 	end)()
