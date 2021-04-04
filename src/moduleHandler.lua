@@ -51,7 +51,7 @@ function handler.runEvent(event, guild, conn, ...)
 				local shouldDisable, reason = mod.execute(..., settings, conn)
 				if shouldDisable == true then
 					handler.disable(mod.name, guild, settings, conn)
-					guild.owner:send(format('module %s was disabled because %s', mod.name, reason))
+					guild.owner:send(format('Module `%s` was disabled, Error: %s', mod.name, reason))
 				end
 			end
 		end
