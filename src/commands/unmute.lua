@@ -1,5 +1,5 @@
 local toast = require 'toast'
-local muteUtil = require 'muteUtil'
+local util = require 'muteUtil'
 
 return {
     name = 'unmute',
@@ -24,7 +24,11 @@ return {
             return msg:reply('I cannot manage this user!')
         end
 
-        muteUtil.unmute(conn, msg.guild.id, args.target, settings.mute_role)
-        return msg:reply(args.target.name .. ' has been unmuted!')
+        local target = args.target
+        local logs = settings.log_channel and msg.guild:getChannel(settings.log_channel)
+
+        util.unmute(conn, msg.guild.id, target, settings.mute_role)
+        util.muteEmbed(logs, target.name .. ' has been unmuted by ' .. msg.author.name, 'YELLOW')
+        return msg:reply(target.name .. ' has been unmuted!')
     end
 }
