@@ -9,36 +9,52 @@ local blacklistedCommands = {
 	eval = true
 }
 
+local function channelCheck(msg, id)
+	local chnl = msg.guild:getChannel(id)
+	if not chnl then return false, 'Invalid channel id' end
+	return true
+end
+
+local function roleCheck(msg, id)
+	local chnl = msg.guild:getRole(id)
+	if not chnl then return false, 'Invalid role id' end
+	return true
+end
+
 local settingColumns = {
 	log_channel = {
 		name = 'log_channel',
 		description = 'The channel where logs are sent to.',
 		args = '<channel id>',
-		modules = {'message-delete-log', 'message-edit-log'}
+		modules = {'message-delete-log', 'message-edit-log'},
+		check = channelCheck
 	},
 	welcome_channel = {
 		name = 'welcome_channel',
 		description = 'Welcomes/Goodbyes people who join/leave.',
 		args = '<channel id>',
-		modules = {'member-welcome', 'member-goodbye'}
+		modules = {'member-welcome', 'member-goodbye'},
+		check = channelCheck
 	},
 	auto_role = {
 		name = 'auto_role',
 		description = 'Gives someone a role when they join.',
 		args = '<role id>',
-		modules = {'member-auto-role'}
+		modules = {'member-auto-role'},
+		check = roleCheck
 	},
 	mute_role = {
 		name = 'mute_role',
 		description = 'Set the role that is given when the mute command is ran.',
 		args = '<role id>',
-		modules = {'mute-handler', 'mute-handler-leave', 'mute-handler-join'}
+		modules = {'mute-handler', 'mute-handler-leave', 'mute-handler-join'},
+		check = roleCheck
 	},
 	prefix = {
 		name = 'prefix',
 		description = 'The prefix for the bot. (The prefix command is better)',
 		args = '<prefix>',
-		modules = {}
+		modules = {},
 	}
 }
 
@@ -55,14 +71,14 @@ return {
 	aliases = {'config'},
 	execute = function(msg, args, settings)
 		local query = args.setting
-		local coloum = settingColumns[query]
+		local column = settingColumns[query]
 
-		if coloum then
+		if column then
 			return toast.Embed()
-				:setTitle(coloum.name)
-				:setDescription(coloum.description)
-				:addField('Value:', settings[coloum.name])
-				:setFooter('Arguments for setting: ' .. coloum.args)
+				:setTitle(column.name)
+				:setDescription(column.description)
+				:addField('Value:', settings[column.name])
+				:setFooter('Arguments for setting: ' .. column.args)
 				:setColor('GREEN')
 				:send(msg.channel)
 		else
@@ -99,8 +115,14 @@ return {
 			execute = function(msg, args, settings, conn)
 				local query = args.setting
 				local value = args.value
+				local column = settingColumns[query]
 
-				if not settingColumns[query] then return msg:reply('No setting found for `' .. query .. '`') end
+				if not column then return msg:reply('No setting found for `' .. query .. '`') end
+
+				if column.check then
+					local run, err = column.check(msg, value)
+					if not run then return msg:reply('Could not set the value to that because the check valid, error: ' .. err) end
+				end
 
 				updateSettings(query, value, msg.guild.id, conn)
 
