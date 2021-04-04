@@ -51,7 +51,13 @@ function handler.runEvent(event, guild, conn, ...)
 				local shouldDisable, reason = mod.execute(..., settings, conn)
 				if shouldDisable == true then
 					handler.disable(mod.name, guild, settings, conn)
-					guild.owner:send(format('Module `%s` was disabled, Error: %s', mod.name, reason))
+					local logs = settings.log_channel and guild:getChannel(settings.log_channel)
+					local err = format('Module `%s` was disabled, Error: %s', mod.name, reason)
+					if not logs then
+						guild.owner:send(err)
+					else
+						logs:send(err)
+					end
 				end
 			end
 		end
