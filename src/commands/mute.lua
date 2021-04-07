@@ -1,3 +1,4 @@
+local time = require 'toast' .util.format
 local util = require 'muteUtil'
 
 return {
@@ -43,7 +44,7 @@ return {
 
         util.muteEmbed(logs, target.name .. ' has been muted', 'RED', 'Reason: ' .. (reason or 'No reason provided'))
 
-        args.target:send('You have been muted in %s%s%s', msg.guild.name, reason and ' because ' or '.', reason or '')
+        args.target:sendf('You have been muted in %s%s%s\nLength: %s', msg.guild.name, reason and ' because ' or '.', reason or '', time(args.time * 1000))
         return msg:reply(target.name .. ' has been muted!')
     end
 }
