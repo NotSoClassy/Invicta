@@ -13,6 +13,7 @@ return {
 
 		if not chnl then return true, 'Invalid channel' end
 
-		return util.safeSend(chnl, 'Welcome to ' .. member.guild.name .. ', ' .. member.tag .. '!')
+		local success, err = util.safeSend(chnl, 'Welcome to ' .. member.guild.name .. ', ' .. member.tag .. '!')
+		return not success, err
 	end
 }

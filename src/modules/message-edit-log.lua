@@ -18,7 +18,7 @@ return {
 
 		if #oldContent == 0 and #newContent == 0 then return end
 
-		return toast.Embed()
+		local success, err = toast.Embed()
 			:setAuthor('Message Edited')
 			:addField('Old Content:', oldContent)
 			:addField('New Content:', newContent)
@@ -27,5 +27,6 @@ return {
 			:setFooter('Message ID: ' .. msg.id)
 			:setColor('YELLOW')
 			:send(chnl)
+		return not success, err
 	end
 }

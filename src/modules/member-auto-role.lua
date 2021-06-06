@@ -16,6 +16,7 @@ return {
 
 		if not role then return true, 'Invalid role' end
 
-		return member:addRole(role.id)
+		local success, err = member:addRole(role.id)
+		return not success, err
 	end
 }

@@ -13,7 +13,7 @@ return {
 
 		if not chnl then return true, 'Invalid channel' end
 
-		return toast.Embed()
+		local success, err = toast.Embed()
 			:setAuthor('Message Deleted')
 			:setDescription('**Content:**\n'  .. msg.cleanContent)
 			:addField('Author:', msg.author.mentionString, true)
@@ -21,5 +21,6 @@ return {
 			:setFooter('Message ID: ' .. msg.id)
 			:setColor('RED')
 			:send(chnl)
+		return not success, err
 	end
 }
