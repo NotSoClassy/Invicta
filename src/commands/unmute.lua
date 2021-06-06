@@ -14,7 +14,6 @@ return {
     userPerms = {'manageRoles'},
     botPerms = {'manageRoles'},
     execute = function(msg, args, settings, conn)
-
         if not settings.mute_role then return msg:reply('There isn\'t a mute role set.') end
 
         local role = msg.guild:getRole(settings.mute_role)
@@ -26,9 +25,10 @@ return {
 
         local target = args.target
         local logs = settings.log_channel and msg.guild:getChannel(settings.log_channel)
+        local name = target.name:gsub('@', '\\@')
 
         util.unmute(conn, msg.guild.id, target, settings.mute_role)
         util.muteEmbed(logs, target.name .. ' has been unmuted by ' .. msg.author.name, 'YELLOW')
-        return msg:reply(target.name .. ' has been unmuted!')
+        return msg:reply(name .. ' has been unmuted!')
     end
 }
