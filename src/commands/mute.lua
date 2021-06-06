@@ -40,7 +40,7 @@ return {
 
         local logs = settings.log_channel and msg.guild:getChannel(settings.log_channel)
         local reason = args.reason and table.concat(args.reason)
-        local name = target.name:gsub('@', '\\@')
+        local name = target.name:gsub('@', '@\226\128\139')
 
         util.muteEmbed(logs, name .. ' has been muted', 'RED', 'Reason: ' .. (reason or 'No reason provided'))
 

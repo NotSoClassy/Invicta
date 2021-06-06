@@ -25,7 +25,7 @@ return {
 
         local target = args.target
         local logs = settings.log_channel and msg.guild:getChannel(settings.log_channel)
-        local name = target.name:gsub('@', '\\@')
+        local name = target.name:gsub('@', '@\226\128\139')
 
         util.unmute(conn, msg.guild.id, target, settings.mute_role)
         util.muteEmbed(logs, target.name .. ' has been unmuted by ' .. msg.author.name, 'YELLOW')
